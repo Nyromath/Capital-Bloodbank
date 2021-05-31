@@ -33,6 +33,46 @@ int main()
 {
     //INTRO MENU
     //****************
-    
+    bool flag = 0;
+    int choice;
+    while (flag == 0) {
+        cout << "\n\t\t\t\t\tWELCOME TO CAPITAL BLOODBANK\n";
+        cout << "************************************************************************************************************\n\n";
+
+        cout << "1. About Us\n";
+        cout << "2. Contact Info\n";
+        cout << "3. Register as Donor\n";
+        cout << "4. Login as Donor\n";
+        cout << "5. Register as Recipient\n";
+        cout << "6. Login as Recipient\n";
+        cout << "7. Login as Administrator\n";
+        cout << "8. Exit\n\n";
+        cout << "Enter Option Number:\t";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            break;
+        case 2:
+            display_contact_info();
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+        case 6:
+            break;
+        case 7:
+            break;
+        case 8:
+            break;
+        default:
+            cout << "Please enter a valid menu option.\n";
+            system("PAUSE");
+            system("CLS");
+        }
+    }
     //****************
 }
