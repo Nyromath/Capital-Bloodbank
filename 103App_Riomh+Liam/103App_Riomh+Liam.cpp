@@ -67,6 +67,8 @@ int main()
         case 7:
             break;
         case 8:
+            cout << "Thank you for using Capital Bloodbank!\n";
+            return 0;
             break;
         default:
             cout << "Please enter a valid menu option.\n";
