@@ -99,8 +99,7 @@ void donor_registration() {
     system("CLS");
     //declaring donor struct to store details, and temp values for validating
     struct Donor reg;
-    string tempPW1, tempPW2, condition;
-    char tempGender, conditionCheck;
+    string tempPW1, tempPW2, tempGender;
     bool flag = 0;
 
     //taking user input for donor
@@ -153,22 +152,19 @@ void donor_registration() {
     do {
         cout << "Enter Gender (Male/Female/Other):\t";
         cin >> tempGender;
-        tempGender = tolower(tempGender);
-        switch (tempGender) {
-        case 'm':
+        if (tempGender == "Male" || tempGender == "male" || tempGender == "m") { //allowing multiple casing versions
             reg.gender = "Male";
             flag = 0;
-            break;
-        case 'f':
+        }
+        else if (tempGender == "Female" || tempGender == "female" || tempGender == "f") { //allowing multiple casing versions
             reg.gender = "Female";
             flag = 0;
-            break;
-        case 'o':
+        }
+        else if (tempGender == "Other" || tempGender == "other" || tempGender == "o") { //allowing multiple casing versions
             reg.gender = "Other";
             flag = 0;
-            break;
-        default:
-            cout << "Please enter valid gender.\n";
+        }
+        else {
             flag = 1;
         }
     } while (flag == 1);
@@ -197,6 +193,27 @@ void donor_registration() {
         }
     } while (flag == 1);*/
 
+    //Registering user data to csv file
+    ofstream regToFile;
+    regToFile.open ("donors.csv", ios::app);
+
+    regToFile << reg.name << ",";
+    regToFile << reg.password << ",";
+    regToFile << reg.email << ",";
+    regToFile << reg.bloodType << ",";
+    regToFile << reg.streetAddress << ",";
+    regToFile << reg.suburb << ",";
+    regToFile << reg.city << ",";
+    regToFile << reg.ethnicity << ",";
+    regToFile << reg.gender << ",";
+    regToFile << reg.contactNumber << ",";
+    regToFile << reg.dobDay << ",";
+    regToFile << reg.dobMonth << ",";
+    regToFile << reg.dobYear << endl;
+
+    regToFile.close();
+
+    cout << "\nSuccessfully registered " << reg.name << " as Donor.\n\n";
 
     system("PAUSE");
     system("CLS");
@@ -209,6 +226,7 @@ int main()
     bool flag = 0;
     int choice;
     while (flag == 0) {
+        choice = 1;
         cout << "\n\t\t\t\t\tWELCOME TO CAPITAL BLOODBANK\n";
         cout << "************************************************************************************************************\n\n";
 
