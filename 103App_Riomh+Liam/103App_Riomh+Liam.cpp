@@ -220,6 +220,72 @@ void donor_registration() {
     system("CLS");
 }
 
+void recipient_registration() {
+    system("CLS");
+    //declaring struct to register recipient, and temp values for validation
+    struct Recipient reg;
+    string tempPW1, tempPW2, tempGender;
+    bool flag = 0;
+
+    //taking user input for recipient
+    cout << "\tREGISTER AS RECIPIENT\n";
+    cout << "*************************************\n";
+    cin.ignore();
+    cout << "Enter Full Name:\t";
+    getline(cin, reg.name);
+    cout << "Enter Email:\t\t";
+    cin >> reg.email;
+    //do while loop to confirm user's password
+    do {
+        cin.ignore();
+        cout << "Enter Password:\t\t";
+        getline(cin, tempPW1);
+        cout << "Confirm Password:\t";
+        getline(cin, tempPW2);
+
+        if (tempPW2 == tempPW1) {
+            reg.password = tempPW1;
+            flag = 0;
+        }
+        else {
+            cout << "Password does not match. Please enter password again.\n";
+            flag = 1;
+        }
+    } while (flag == 1);
+
+    cout << "Enter Contact Number:\t";
+    cin >> reg.contactNumber;
+    cin.ignore();
+    cout << "Enter Street Address:\t";
+    getline(cin, reg.streetAddress);
+    cout << "Enter Suburb:\t\t";
+    getline(cin, reg.suburb);
+    cout << "Enter City:\t\t";
+    getline(cin, reg.city);
+    cout << "Enter Registration Number:\t";
+    cin >> reg.registrationNumber;
+
+    //Registering recipient data to file
+    ofstream regToFile;
+    regToFile.open("recipients.csv", ios::app);
+
+    regToFile << reg.name << ",";
+    regToFile << reg.password << ",";
+    regToFile << reg.streetAddress << ",";
+    regToFile << reg.suburb << ",";
+    regToFile << reg.city << ",";
+    regToFile << reg.email << ",";
+    regToFile << reg.contactNumber << ",";
+    regToFile << reg.registrationNumber << endl;
+
+    regToFile.close();
+
+    cout << "\nSuccessfully registered " << reg.name << " as Recipient.\n\n";
+
+    system("PAUSE");
+    system("CLS");
+}
+
 int main()
 {
     //INTRO MENU
@@ -227,7 +293,6 @@ int main()
     bool flag = 0;
     int choice;
     while (flag == 0) {
-        choice = 1;
         cout << "\n\t\t\t\t\tWELCOME TO CAPITAL BLOODBANK\n";
         cout << "************************************************************************************************************\n\n";
 
@@ -254,6 +319,7 @@ int main()
         case 4:
             break;
         case 5:
+            recipient_registration();
             break;
         case 6:
             break;
