@@ -156,7 +156,7 @@ void donor_benefits() {
     cout << "********************************************************************************************\n\n";
     cout << "\tThere are many benefits to donating blood here are a few:\n";
     cout << "\t One blood donation can save up to 3 lives.\n";
-    cout << "\tBlood donation not only makes the receiver�s life good but also helps the donor to maintain good health.\n";
+    cout << "\tBlood donation not only makes the receivers life good but also helps the donor to maintain good health.\n";
     cout << "\tHealth benefits of blood donation include reduced risk of hemochromatosis. \n";
     cout << "\tBlood donation helps in lowering the risk of cancer. By donating blood the iron stores in the body are\n";
     cout << "\tmaintained at healthy levels.\n";
@@ -426,6 +426,70 @@ void recipient_registration() {
     system("CLS");
 }
 
+
+
+
+
+
+
+void admin_landing_screen()
+{
+    
+    bool flag = 0;
+    int choice;
+    while (flag == 0)
+       
+    {
+        system("CLS");
+        cout << "\n\t\t\t\t\tWELCOME ADMIN \n";
+        cout << "************************************************************************************************************\n\n";
+
+        cout << "1. view donor's report\n";
+        cout << "2. view Recipient report \n";
+        cout << "3. Update donor blood testing report \n";
+        cout << "4. Logout\n";
+         cout << "Enter Option Number:\t";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+          
+            break;
+        case 2:
+           
+            break;
+        case 3:
+            
+            break;
+        case 4:
+            flag = 1;
+            system("CLS");
+           
+            break;
+        default:
+            cout << "Please enter a valid menu option.\n";
+            system("PAUSE");
+            system("CLS");
+        }
+    }
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int main()
 {
     //INTRO MENU
@@ -467,6 +531,7 @@ int main()
             recipient_landing_screen();
             break;
         case 7:
+            admin_landing_screen();
             break;
         case 8:
             cout << "Thank you for using Capital Bloodbank!\n";
