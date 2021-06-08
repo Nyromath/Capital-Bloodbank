@@ -75,7 +75,6 @@ void intro_function() {
     cout << "If you are interested in donating blood or are in need of blood please register and visit the contact tab for furthur information";
 
 }
-//hello this is a test-liam
 //****************
 
 //CONTACT FUNCTION
