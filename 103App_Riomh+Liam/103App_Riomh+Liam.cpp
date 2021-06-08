@@ -428,6 +428,17 @@ void recipient_registration() {
 
 int main()
 {
+    //reading files to vectors
+    vector<Donor> donors;
+    vector<Recipient> recipients;
+    ifstream myFile;
+    myFile.open("donors.csv", ios::in);
+
+    myFile.close();
+    myFile.open("recipients.csv", ios::in);
+
+    myFile.close();
+
     //INTRO MENU
     //****************
     bool flag = 0;
