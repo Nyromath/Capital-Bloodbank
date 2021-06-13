@@ -236,6 +236,51 @@ void donor_landing_screen() {
 
 }
 
+vector<Donor>* donor_login(vector<Donor>* donors) {
+    system("CLS");
+
+    //declaring necessary variables
+    string login;
+    int position = 0, attempt = 3;
+    bool flag = 0;
+
+    //Intro & taking input
+    cout << "\tLOGIN AS DONOR\n";
+    cout << "******************************\n";
+    cout << "Enter Email:\t";
+    cin >> login;
+
+    //Validating email
+    for (auto element : *donors) {
+        if (login == element.email) {
+            flag = 1;
+            break;
+        }
+        else {
+            position++;
+        }
+    }
+
+    if (flag == 0) {
+        cout << "\nEmail not found.\n\n";
+        system("PAUSE");
+        donor_login(donors);
+    }
+    else { //Entering and validating password
+        cout << "\nEnter Password:\t";
+        cin.ignore();
+        getline(cin, login);
+        if (login == *donors[position].password) {
+
+        }
+    }
+
+    system("PAUSE");
+    system("CLS");
+
+    return donors;
+}
+
 void donor_registration() {
     system("CLS");
     //declaring donor struct to store details, and temp values for validating
@@ -429,13 +474,62 @@ void recipient_registration() {
 int main()
 {
     //reading files to vectors
+    //declaring necessary variables
     vector<Donor> donors;
-    vector<Recipient> recipients;
     ifstream myFile;
+    Donor transaction;
+    string line;
+    int linenum = 0;
     myFile.open("donors.csv", ios::in);
 
-    myFile.close();
-    myFile.open("recipients.csv", ios::in);
+    //Loop to take input from file
+    while (getline(myFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        //String variables
+        getline(linestream, item, ',');
+        transaction.name = item;
+        getline(linestream, item, ',');
+        transaction.password = item;
+        getline(linestream, item, ',');
+        transaction.email = item;
+        getline(linestream, item, ',');
+        transaction.bloodType = item;
+        getline(linestream, item, ',');
+        transaction.streetAddress = item;
+        getline(linestream, item, ',');
+        transaction.suburb = item;
+        getline(linestream, item, ',');
+        transaction.city = item;
+        getline(linestream, item, ',');
+        transaction.ethnicity = item;
+        getline(linestream, item, ',');
+        transaction.gender = item;
+
+        //Int Variables
+        getline(linestream, item, ',');
+        stringstream ss(item);
+        ss >> transaction.contactNumber;
+
+        getline(linestream, item, ',');
+        stringstream day(item);
+        day >> transaction.dobDay;
+
+        getline(linestream, item, ',');
+        stringstream month(item);
+        month >> transaction.dobMonth;
+
+        getline(linestream, item, ',');
+        stringstream year(item);
+        year >> transaction.dobYear;
+
+        //Add structure to vector 'donors'.
+        donors.push_back(transaction);
+        linenum++;
+    }
+    //creating pointer for donors vector
+    vector<Donor>* ptrdonors = &donors;
 
     myFile.close();
 
@@ -469,7 +563,7 @@ int main()
             donor_registration();
             break;
         case 4:
-            donor_landing_screen();
+            donor_login(ptrdonors);
             break;
         case 5:
             recipient_registration();
