@@ -259,7 +259,7 @@ void donor_how_i_donate() {
 
 }
 
-void donor_landing_screen() {
+vector<Donor>* donor_landing_screen(vector<Donor>* donors) {
     int choice;
     bool flag = 0;
 
@@ -301,16 +301,16 @@ void donor_landing_screen() {
 
     }
 
-
+    return donors;
 }
 
 vector<Donor>* donor_login(vector<Donor>* donors) {
     system("CLS");
 
     //declaring necessary variables
-    string login;
+    string login, pword;
     int position = 0, attempt = 3;
-    bool flag = 0;
+    bool Eflag = 0, Pflag = 0;
 
     //Intro & taking input
     cout << "\tLOGIN AS DONOR\n";
@@ -321,16 +321,23 @@ vector<Donor>* donor_login(vector<Donor>* donors) {
     //Validating email
     for (auto element : *donors) {
         if (login == element.email) {
-            flag = 1;
-            cout << "\nEnter Password:\t";
+            Eflag = 1;
+            pword = element.password;
             cin.ignore();
-            getline(cin, login);
             while (attempt > 0) {
-                if (login == element.password) {
+                cout << "\nEnter Password:\t";
+                getline(cin, login);
 
+                if (login == pword) {
+                    donor_landing_screen(donors);
+                    break;
                 }
                 else {
-
+                    attempt--;
+                    cout << "Invalid Password. " << attempt << " Attempts Remaining.\n";
+                    if (attempt == 0) {
+                        Pflag = 1;
+                    }
                 }
             }
             break;
@@ -340,10 +347,15 @@ vector<Donor>* donor_login(vector<Donor>* donors) {
         }
     }
 
-    if (flag == 0) {
+    if (Eflag == 0) {
         cout << "\nEmail not found.\n\n";
         system("PAUSE");
         donor_login(donors);
+    }
+
+    if (Pflag == 1) {
+        cout << "\nNo more attempts remaining. Please try again later.\n";
+        system("PAUSE");
     }
     /*else { //Entering and validating password
         cout << "\nEnter Password:\t";
@@ -354,7 +366,6 @@ vector<Donor>* donor_login(vector<Donor>* donors) {
         }
     }*/
 
-    system("PAUSE");
     system("CLS");
 
     return donors;
@@ -618,62 +629,107 @@ int main()
     //reading files to vectors
     //declaring necessary variables
     vector<Donor> donors;
+    vector<Recipient> recipients;
     ifstream myFile;
-    Donor transaction;
+    Donor transactionD;
+    Recipient transactionR;
     string line;
+
+    //opening Donors
     int linenum = 0;
     myFile.open("donors.csv", ios::in);
 
-    //Loop to take input from file
+    //Loop to take donor input from file
     while (getline(myFile, line)) {
         istringstream linestream(line);
         string item;
 
         //String variables
         getline(linestream, item, ',');
-        transaction.name = item;
+        transactionD.name = item;
         getline(linestream, item, ',');
-        transaction.password = item;
+        transactionD.password = item;
         getline(linestream, item, ',');
-        transaction.email = item;
+        transactionD.email = item;
         getline(linestream, item, ',');
-        transaction.bloodType = item;
+        transactionD.bloodType = item;
         getline(linestream, item, ',');
-        transaction.streetAddress = item;
+        transactionD.streetAddress = item;
         getline(linestream, item, ',');
-        transaction.suburb = item;
+        transactionD.suburb = item;
         getline(linestream, item, ',');
-        transaction.city = item;
+        transactionD.city = item;
         getline(linestream, item, ',');
-        transaction.ethnicity = item;
+        transactionD.ethnicity = item;
         getline(linestream, item, ',');
-        transaction.gender = item;
+        transactionD.gender = item;
 
         //Int Variables
         getline(linestream, item, ',');
         stringstream ss(item);
-        ss >> transaction.contactNumber;
+        ss >> transactionD.contactNumber;
 
         getline(linestream, item, ',');
         stringstream day(item);
-        day >> transaction.dobDay;
+        day >> transactionD.dobDay;
 
         getline(linestream, item, ',');
         stringstream month(item);
-        month >> transaction.dobMonth;
+        month >> transactionD.dobMonth;
 
         getline(linestream, item, ',');
         stringstream year(item);
-        year >> transaction.dobYear;
+        year >> transactionD.dobYear;
 
         //Add structure to vector 'donors'.
-        donors.push_back(transaction);
+        donors.push_back(transactionD);
         linenum++;
     }
-    //creating pointer for donors vector
-    vector<Donor>* ptrdonors = &donors;
 
     myFile.close();
+
+    //opening recipients
+    linenum = 0;
+    myFile.open("recipients.csv", ios::in);
+
+    //Loop to take donor input from file
+    while (getline(myFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        //String variables
+        getline(linestream, item, ',');
+        transactionR.name = item;
+        getline(linestream, item, ',');
+        transactionR.password = item;
+        getline(linestream, item, ',');
+        transactionR.email = item;
+        getline(linestream, item, ',');
+        transactionR.streetAddress = item;
+        getline(linestream, item, ',');
+        transactionR.suburb = item;
+        getline(linestream, item, ',');
+        transactionR.city = item;
+
+        //Int Variables
+        getline(linestream, item, ',');
+        stringstream ss(item);
+        ss >> transactionR.contactNumber;
+
+        getline(linestream, item, ',');
+        stringstream rn(item);
+        rn >> transactionR.registrationNumber;
+
+        //Add structure to vector 'recipients'.
+        recipients.push_back(transactionR);
+        linenum++;
+    }
+
+    myFile.close();
+
+    //creating pointer for donors and recipients vectors
+    vector<Donor>* ptrdonors = &donors;
+    vector<Recipient>* ptrrecipients = &recipients;
 
     //INTRO MENU
     //****************
