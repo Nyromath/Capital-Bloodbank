@@ -104,6 +104,65 @@ void display_contact_info()
     system("CLS");
 }
 //****************
+void donors_contact_info() {
+     
+    int i;
+    system("CLS");
+    cout<< "\n\t\t\t\t\t DONORS CONTACT INFO\n";
+        cout << "********************************************************************************************\n\n";
+        ifstream regToFile;
+        regToFile.open("donors.csv", ios::in );
+        for (i = 0; i < 3; i++) {
+            cout << "\n\t\t\t\t\tDONOR " << i + 1 << ":"<<endl;
+            cout << "-------------------------------------------------------------------------------------------\n\n";
+            cout << "\nNAME:"<<endl;
+           
+           
+            cout << "\nEMAIL:"<<endl;
+
+            cout << "\nCONTACT NUMBER:"<<endl;
+
+            cout << "\nADDRESS:" << endl;
+
+
+
+
+        }
+       
+        
+
+
+        system("PAUSE");
+        system("CLS");
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void recipient_landing_screen() {
     int choice;
@@ -124,14 +183,17 @@ void recipient_landing_screen() {
         switch (choice) {
         case 1:
 
+            //donors_by_blood();
 
             break;
         case 2:
-
+            //donors_by_location();
             break;
 
         case 3:
+            donors_contact_info();
             break;
+
         case 4:
             flag = 1;
             system("CLS");
@@ -156,7 +218,7 @@ void donor_benefits() {
     cout << "********************************************************************************************\n\n";
     cout << "\tThere are many benefits to donating blood here are a few:\n";
     cout << "\t One blood donation can save up to 3 lives.\n";
-    cout << "\tBlood donation not only makes the receiver�s life good but also helps the donor to maintain good health.\n";
+    cout << "\tBlood donation not only makes the receivers life good but also helps the donor to maintain good health.\n";
     cout << "\tHealth benefits of blood donation include reduced risk of hemochromatosis. \n";
     cout << "\tBlood donation helps in lowering the risk of cancer. By donating blood the iron stores in the body are\n";
     cout << "\tmaintained at healthy levels.\n";
@@ -482,6 +544,69 @@ void recipient_registration() {
     system("CLS");
 }
 
+
+
+
+
+
+
+void admin_landing_screen()
+{
+    
+    bool flag = 0;
+    int choice;
+    while (flag == 0)
+       
+    {
+        system("CLS");
+        cout << "\n\t\t\t\t\tWELCOME ADMIN \n";
+        cout << "************************************************************************************************************\n\n";
+
+        cout << "1. view donor's report\n";
+        cout << "2. view Recipient report \n";
+        cout << "3. Update donor blood testing report \n";
+        cout << "4. Logout\n";
+         cout << "Enter Option Number:\t";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+          
+            break;
+        case 2:
+           
+            break;
+        case 3:
+            
+            break;
+        case 4:
+            flag = 1;
+            system("CLS");
+           
+            break;
+        default:
+            cout << "Please enter a valid menu option.\n";
+            system("PAUSE");
+            system("CLS");
+        }
+    }
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int main()
 {
     //reading files to vectors
@@ -583,6 +708,7 @@ int main()
             recipient_landing_screen();
             break;
         case 7:
+            admin_landing_screen();
             break;
         case 8:
             cout << "Thank you for using Capital Bloodbank!\n";
