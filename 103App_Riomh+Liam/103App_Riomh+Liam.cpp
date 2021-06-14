@@ -105,17 +105,23 @@ void display_contact_info()
 }
 //****************
 void donors_contact_info() {
-     
+    struct Donor donorinfo;
+    string name;
     int i;
     system("CLS");
     cout<< "\n\t\t\t\t\t DONORS CONTACT INFO\n";
         cout << "********************************************************************************************\n\n";
         ifstream regToFile;
-        regToFile.open("donors.csv", ios::in );
+        regToFile.open("donors.csv", ios::out );
         for (i = 0; i < 3; i++) {
             cout << "\n\t\t\t\t\tDONOR " << i + 1 << ":"<<endl;
             cout << "-------------------------------------------------------------------------------------------\n\n";
             cout << "\nNAME:"<<endl;
+            while (getline(regToFile, name)) {
+
+                cout << name;
+
+            }
            
            
             cout << "\nEMAIL:"<<endl;
