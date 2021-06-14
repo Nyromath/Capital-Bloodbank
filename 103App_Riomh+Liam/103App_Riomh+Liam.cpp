@@ -104,6 +104,65 @@ void display_contact_info()
     system("CLS");
 }
 //****************
+void donors_contact_info() {
+     
+    int i;
+    system("CLS");
+    cout<< "\n\t\t\t\t\t DONORS CONTACT INFO\n";
+        cout << "********************************************************************************************\n\n";
+        ifstream regToFile;
+        regToFile.open("donors.csv", ios::in );
+        for (i = 0; i < 3; i++) {
+            cout << "\n\t\t\t\t\tDONOR " << i + 1 << ":"<<endl;
+            cout << "-------------------------------------------------------------------------------------------\n\n";
+            cout << "\nNAME:"<<endl;
+           
+           
+            cout << "\nEMAIL:"<<endl;
+
+            cout << "\nCONTACT NUMBER:"<<endl;
+
+            cout << "\nADDRESS:" << endl;
+
+
+
+
+        }
+       
+        
+
+
+        system("PAUSE");
+        system("CLS");
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void recipient_landing_screen() {
     int choice;
@@ -124,14 +183,17 @@ void recipient_landing_screen() {
         switch (choice) {
         case 1:
 
+            //donors_by_blood();
 
             break;
         case 2:
-
+            //donors_by_location();
             break;
 
         case 3:
+            donors_contact_info();
             break;
+
         case 4:
             flag = 1;
             system("CLS");
@@ -474,7 +536,6 @@ void admin_landing_screen()
     }
   
 }
-
 
 
 
