@@ -254,6 +254,17 @@ vector<Donor>* donor_login(vector<Donor>* donors) {
     for (auto element : *donors) {
         if (login == element.email) {
             flag = 1;
+            cout << "\nEnter Password:\t";
+            cin.ignore();
+            getline(cin, login);
+            while (attempt > 0) {
+                if (login == element.password) {
+
+                }
+                else {
+
+                }
+            }
             break;
         }
         else {
@@ -266,14 +277,14 @@ vector<Donor>* donor_login(vector<Donor>* donors) {
         system("PAUSE");
         donor_login(donors);
     }
-    else { //Entering and validating password
+    /*else { //Entering and validating password
         cout << "\nEnter Password:\t";
         cin.ignore();
         getline(cin, login);
         if (login == *donors[position].password) {
 
         }
-    }
+    }*/
 
     system("PAUSE");
     system("CLS");
