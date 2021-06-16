@@ -259,13 +259,89 @@ void donor_how_i_donate() {
 
 }
 
+string update_detail_string(string attribute) { //small function to update string variables in donor and recipient screens, so as to avoid repeat code
+    string s;
+    cin.ignore();
+    cout << "\nEnter New " << attribute << ":\t";
+    getline(cin, s);
+
+    return s;
+}
+
+int update_detail_int(string attribute) { //small function to update int variables in donor and recipient screens, so as to avoid repeat code
+    int i;
+    cout << "\nEnter New " << attribute << ":\t";
+    cin >> i;
+
+    return i;
+}
+
 vector<Donor>* donor_manage_info(vector<Donor>* donors, int p) {
-    system("CLS");
+    int n = 0, choice;
+    bool flag = 0;
 
-    //display current info and menu
-    cout << "\nYour Current Info:\n\n";
-    //cout << "1.\tName:\t" << donors->name;
+    //display current info and menu. using auto for loop because no other direct method of pointing to the vector would work
+    for (auto element : *donors) {
+        if (n == p) {
+            while (flag == 0) {
+                system("CLS");
+                cout << "\nYour Current Info:\n\n";
+                cout << "1.\tName:\t\t" << element.name << endl;
+                cout << "2.\tEmail:\t\t" << element.email << endl;
+                cout << "3.\tPassword:\t" << element.password << endl;
+                cout << "4.\tAddress:\t" << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
+                cout << "5.\tContact Number:\t" << element.contactNumber << endl;
+                cout << "6.\tEthnicity:\t" << element.ethnicity << endl;
+                cout << "7.\tGender:\t\t" << element.gender << endl;
+                cout << "8.\tDate of Birth:\t" << element.dobDay << "/" << element.dobMonth << "/" << element.dobYear << endl;
+                cout << "9.\tExit\n\n";
 
+                //taking user input for editing info
+                cout << "Enter Menu Option to Edit Information:\t";
+                cin >> choice;
+
+                switch (choice) {
+                case 1:
+                    element.name = update_detail_string("Name");
+                    break;
+                case 2:
+                    element.email = update_detail_string("Email");
+                    break;
+                case 3:
+                    element.password = update_detail_string("Password");
+                    break;
+                case 4:
+                    element.streetAddress = update_detail_string("Street Address");
+                    element.suburb = update_detail_string("Suburb");
+                    element.city = update_detail_string("City");
+                    break;
+                case 5:
+                    element.contactNumber = update_detail_int("Contact Number");
+                    break;
+                case 6:
+                    element.ethnicity = update_detail_string("Ethnicity");
+                    break;
+                case 7:
+                    element.gender = update_detail_string("Gender");
+                    break;
+                case 8:
+                    cout << "\nEnter new Date of Birth:\n";
+                    element.dobDay = update_detail_int("Day");
+                    element.dobMonth = update_detail_int("Month");
+                    element.dobYear = update_detail_int("Year");
+                    break;
+                case 9:
+                    flag = 1;
+                    break;
+                default:
+                    cout << "\nPlease enter a valid menu option.\n\n";
+                    system("PAUSE");
+                }
+            }
+        }
+
+        n++;
+    }
 
     return donors;
 }
@@ -713,7 +789,6 @@ int main()
 {
     //reading files to vectors
     //declaring necessary variables
-   // struct Donor d;
     vector<Donor> donors;
     vector<Recipient> recipients;
     ifstream myFile;

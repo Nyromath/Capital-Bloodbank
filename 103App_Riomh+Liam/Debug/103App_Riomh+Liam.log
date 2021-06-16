@@ -1,8 +1,2 @@
 ﻿  103App_Riomh+Liam.cpp
-C:\Users\270121842\OneDrive - UP Education\Desktop\CS103\Capital-Bloodbank\103App_Riomh+Liam\103App_Riomh+Liam.cpp(274,9): warning C4101: 'choice': unreferenced local variable
-C:\Users\270121842\OneDrive - UP Education\Desktop\CS103\Capital-Bloodbank\103App_Riomh+Liam\103App_Riomh+Liam.cpp(337,23): error C2039: 'name': is not a member of 'std::vector<Donor,std::allocator<Donor>>'
-C:\Users\270121842\OneDrive - UP Education\Desktop\CS103\Capital-Bloodbank\103App_Riomh+Liam\103App_Riomh+Liam.cpp(262): message : see declaration of 'std::vector<Donor,std::allocator<Donor>>'
-C:\Users\270121842\OneDrive - UP Education\Desktop\CS103\Capital-Bloodbank\103App_Riomh+Liam\103App_Riomh+Liam.cpp(350,42): error C2677: binary '[': no global operator found which takes type 'Donor' (or there is no acceptable conversion)
-C:\Users\270121842\OneDrive - UP Education\Desktop\CS103\Capital-Bloodbank\103App_Riomh+Liam\103App_Riomh+Liam.cpp(351,58): error C2664: 'std::vector<Donor,std::allocator<Donor>> *donor_landing_screen(std::vector<Donor,std::allocator<Donor>>,int)': cannot convert argument 1 from 'std::vector<Donor,std::allocator<Donor>> *' to 'std::vector<Donor,std::allocator<Donor>>'
-C:\Users\270121842\OneDrive - UP Education\Desktop\CS103\Capital-Bloodbank\103App_Riomh+Liam\103App_Riomh+Liam.cpp(351,58): message : No constructor could take the source type, or constructor overload resolution was ambiguous
-C:\Users\270121842\OneDrive - UP Education\Desktop\CS103\Capital-Bloodbank\103App_Riomh+Liam\103App_Riomh+Liam.cpp(273,16): message : see declaration of 'donor_landing_screen'
+  103App_Riomh+Liam.vcxproj -> C:\Users\Riomh\Desktop\CPP\Capital-Bloodbank\103App_Riomh+Liam\Debug\103App_Riomh+Liam.exe
