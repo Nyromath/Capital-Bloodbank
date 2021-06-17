@@ -202,7 +202,7 @@ void donors_contact_info() {
 
 
 
-void recipient_landing_screen() {
+vector<Recipient>* recipient_landing_screen(vector<Recipient>* recip) {
     int choice;
     bool flag = 0;
 
@@ -244,7 +244,7 @@ void recipient_landing_screen() {
 
     }
 
-
+    return recip;
 }
 
 void donor_benefits() {
@@ -291,9 +291,99 @@ void donor_how_i_donate() {
 
 }
 
-vector<Donor>* donor_landing_screen(vector<Donor>* donors) {
+string update_detail_string(string attribute) { //small function to update string variables in donor and recipient screens, so as to avoid repeat code
+    string s;
+    cin.ignore();
+    cout << "\nEnter New " << attribute << ":\t";
+    getline(cin, s);
+
+    return s;
+}
+
+int update_detail_int(string attribute) { //small function to update int variables in donor and recipient screens, so as to avoid repeat code
+    int i;
+    cout << "\nEnter New " << attribute << ":\t";
+    cin >> i;
+
+    return i;
+}
+
+vector<Donor>* donor_manage_info(vector<Donor>* donors, int p) {
+    int n = 0, choice;
+    bool flag = 0;
+
+    //display current info and menu. using auto for loop because no other direct method of pointing to the vector would work
+    for (auto element : *donors) {
+        if (n == p) {
+            while (flag == 0) {
+                system("CLS");
+                cout << "\nYour Current Info:\n\n";
+                cout << "1.\tName:\t\t" << element.name << endl;
+                cout << "2.\tEmail:\t\t" << element.email << endl;
+                cout << "3.\tPassword:\t" << element.password << endl;
+                cout << "4.\tAddress:\t" << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
+                cout << "5.\tContact Number:\t" << element.contactNumber << endl;
+                cout << "6.\tEthnicity:\t" << element.ethnicity << endl;
+                cout << "7.\tGender:\t\t" << element.gender << endl;
+                cout << "8.\tDate of Birth:\t" << element.dobDay << "/" << element.dobMonth << "/" << element.dobYear << endl;
+                cout << "9.\tExit\n\n";
+
+                //taking user input for editing info
+                cout << "Enter Menu Option to Edit Information:\t";
+                cin >> choice;
+
+                switch (choice) {
+                case 1:
+                    element.name = update_detail_string("Name");
+                    break;
+                case 2:
+                    element.email = update_detail_string("Email");
+                    break;
+                case 3:
+                    element.password = update_detail_string("Password");
+                    break;
+                case 4:
+                    element.streetAddress = update_detail_string("Street Address");
+                    element.suburb = update_detail_string("Suburb");
+                    element.city = update_detail_string("City");
+                    break;
+                case 5:
+                    element.contactNumber = update_detail_int("Contact Number");
+                    break;
+                case 6:
+                    element.ethnicity = update_detail_string("Ethnicity");
+                    break;
+                case 7:
+                    element.gender = update_detail_string("Gender");
+                    break;
+                case 8:
+                    cout << "\nEnter new Date of Birth:\n";
+                    element.dobDay = update_detail_int("Day");
+                    element.dobMonth = update_detail_int("Month");
+                    element.dobYear = update_detail_int("Year");
+                    break;
+                case 9:
+                    flag = 1;
+                    break;
+                default:
+                    cout << "\nPlease enter a valid menu option.\n\n";
+                    system("PAUSE");
+                }
+            }
+        }
+
+        n++;
+    }
+
+    return donors;
+}
+
+vector<Donor>* donor_landing_screen(vector<Donor>* donors, int p) {
     int choice;
     bool flag = 0;
+
+
+    //cout << *(donors)[0].name;
 
     while (flag == 0) {
         system("CLS");
@@ -318,6 +408,7 @@ vector<Donor>* donor_landing_screen(vector<Donor>* donors) {
             break;
 
         case 3:
+            donor_manage_info(donors, p);
             break;
         case 4:
             break;
@@ -347,9 +438,8 @@ vector<Donor>* donor_login(vector<Donor>* donors) {
     //Intro & taking input
     cout << "\tLOGIN AS DONOR\n";
     cout << "******************************\n";
-    cout << "Enter Email:\t";
+    cout << "Enter Email (enter \"exit\" to return to menu):\t";
     cin >> login;
-
     //Validating email
     for (auto element : *donors) {
         if (login == element.email) {
@@ -361,7 +451,7 @@ vector<Donor>* donor_login(vector<Donor>* donors) {
                 getline(cin, login);
 
                 if (login == pword) {
-                    donor_landing_screen(donors);
+                    donor_landing_screen(donors, position);
                     break;
                 }
                 else {
@@ -380,9 +470,11 @@ vector<Donor>* donor_login(vector<Donor>* donors) {
     }
 
     if (Eflag == 0) {
-        cout << "\nEmail not found.\n\n";
-        system("PAUSE");
-        donor_login(donors);
+        if (login != "exit") { //will only repeat the function if user hasn't entered "exit". "exit" will allow the user to return to the main menu if they don't know a registered email.
+            cout << "\nEmail not found.\n\n";
+            system("PAUSE");
+            donor_login(donors);
+        }
     }
 
     if (Pflag == 1) {
@@ -403,7 +495,7 @@ vector<Donor>* donor_login(vector<Donor>* donors) {
     return donors;
 }
 
-void donor_registration() {
+vector<Donor>* donor_registration(vector<Donor>* donors) {
     system("CLS");
     //declaring donor struct to store details, and temp values for validating
     struct Donor reg;
@@ -521,13 +613,78 @@ void donor_registration() {
 
     regToFile.close();
 
+    (*donors).push_back(reg);
+
     cout << "\nSuccessfully registered " << reg.name << " as Donor.\n\n";
 
     system("PAUSE");
     system("CLS");
+
+    return donors;
 }
 
-void recipient_registration() {
+vector<Recipient>* recipient_login(vector<Recipient>* recip) {
+    system("CLS");
+
+    //declaring necessary variables
+    string login, pword;
+    int position = 0, attempt = 3;
+    bool Eflag = 0, Pflag = 0;
+
+    //Intro & taking input
+    cout << "\tLOGIN AS RECIPIENT\n";
+    cout << "******************************\n";
+    cout << "Enter Email (enter \"exit\" to return to menu):\t";
+    cin >> login;
+
+    //Validating email
+    for (auto element : *recip) {
+        if (login == element.email) {
+            Eflag = 1;
+            pword = element.password;
+            cin.ignore();
+            while (attempt > 0) {
+                cout << "\nEnter Password:\t";
+                getline(cin, login);
+
+                if (login == pword) {
+                    recipient_landing_screen(recip);
+                    break;
+                }
+                else {
+                    attempt--;
+                    cout << "Invalid Password. " << attempt << " Attempts Remaining.\n";
+                    if (attempt == 0) {
+                        Pflag = 1;
+                    }
+                }
+            }
+            break;
+        }
+        else {
+            position++;
+        }
+    }
+
+    if (Eflag == 0) {
+        if (login != "exit") { //will only repeat the function if user hasn't entered "exit". "exit" will allow the user to return to the main menu if they don't know a registered email.
+            cout << "\nEmail not found.\n\n";
+            system("PAUSE");
+            recipient_login(recip);
+        }
+    }
+
+    if (Pflag == 1) {
+        cout << "\nNo more attempts remaining. Please try again later.\n";
+        system("PAUSE");
+    }
+
+    system("CLS");
+
+    return recip;
+}
+
+vector<Recipient>* recipient_registration(vector<Recipient>* recip) {
     system("CLS");
     //declaring struct to register recipient, and temp values for validation
     struct Recipient reg;
@@ -587,10 +744,14 @@ void recipient_registration() {
 
     regToFile.close();
 
+    (*recip).push_back(reg);
+
     cout << "\nSuccessfully registered " << reg.name << " as Recipient.\n\n";
 
     system("PAUSE");
     system("CLS");
+
+    return recip;
 }
 
 
@@ -724,7 +885,7 @@ int main()
     linenum = 0;
     myFile.open("recipients.csv", ios::in);
 
-    //Loop to take donor input from file
+    //Loop to take recipient input from file
     while (getline(myFile, line)) {
         istringstream linestream(line);
         string item;
@@ -735,13 +896,13 @@ int main()
         getline(linestream, item, ',');
         transactionR.password = item;
         getline(linestream, item, ',');
-        transactionR.email = item;
-        getline(linestream, item, ',');
         transactionR.streetAddress = item;
         getline(linestream, item, ',');
         transactionR.suburb = item;
         getline(linestream, item, ',');
         transactionR.city = item;
+        getline(linestream, item, ',');
+        transactionR.email = item;
 
         //Int Variables
         getline(linestream, item, ',');
@@ -790,16 +951,16 @@ int main()
             display_contact_info();
             break;
         case 3:
-            donor_registration();
+            donor_registration(ptrdonors);
             break;
         case 4:
             donor_login(ptrdonors);
             break;
         case 5:
-            recipient_registration();
+            recipient_registration(ptrrecipients);
             break;
         case 6:
-            recipient_landing_screen();
+            recipient_login(ptrrecipients);
             break;
         case 7:
             admin_landing_screen();
