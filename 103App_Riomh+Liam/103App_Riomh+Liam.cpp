@@ -142,7 +142,7 @@ void donors_contact_info() {
         transactionD.gender = item;
 
 
-
+        
 
 
 
@@ -159,13 +159,13 @@ void donors_contact_info() {
     cout << "\nENTER DONOR NAME TO FIND CONTACT INFO" << endl;
     getline(cin, searchname);
 
-    if (transactionD.name == searchname) {
-        cout << "\nSTREET ADDRESS: " << transactionD.streetAddress;
-        cout << "\nEMAIL: " << transactionD.email << "\n" << endl;
+        if (transactionD.name == searchname) {
+            cout << "\nSTREET ADDRESS: " << transactionD.streetAddress;
+            cout << "\nEMAIL: " << transactionD.email << "\n" << endl;
 
 
 
-    }
+        }
 
 
 
@@ -364,6 +364,7 @@ vector<Donor>* donor_manage_info(vector<Donor>* donors, int p) {
                     break;
                 case 9:
                     flag = 1;
+                    return donors;
                     break;
                 default:
                     cout << "\nPlease enter a valid menu option.\n\n";
@@ -378,12 +379,23 @@ vector<Donor>* donor_manage_info(vector<Donor>* donors, int p) {
     return donors;
 }
 
-vector<Donor>* donor_landing_screen(vector<Donor>* donors, int p) {
+Booking* book_donation(Booking* b) {
+    system("CLS");
+    int day, hour;
+    cout << "\n\tTAKING BOOKINGS FOR MONTH OF JULY 2021\n";
+    cout << "******************************************************\n\n";
+    cout << "Enter Day:\t";
+    cin >> day;
+
+
+    system("PAUSE");
+    system("CLS");
+    return b;
+}
+
+vector<Donor>* donor_landing_screen(vector<Donor>* donors, int p, Booking* b) {
     int choice;
     bool flag = 0;
-
-
-    //cout << *(donors)[0].name;
 
     while (flag == 0) {
         system("CLS");
@@ -411,6 +423,7 @@ vector<Donor>* donor_landing_screen(vector<Donor>* donors, int p) {
             donor_manage_info(donors, p);
             break;
         case 4:
+            book_donation(b);
             break;
         case 5:
             flag = 1;
@@ -427,7 +440,7 @@ vector<Donor>* donor_landing_screen(vector<Donor>* donors, int p) {
     return donors;
 }
 
-vector<Donor>* donor_login(vector<Donor>* donors) {
+vector<Donor>* donor_login(vector<Donor>* donors, Booking* b) {
     system("CLS");
 
     //declaring necessary variables
@@ -451,7 +464,7 @@ vector<Donor>* donor_login(vector<Donor>* donors) {
                 getline(cin, login);
 
                 if (login == pword) {
-                    donor_landing_screen(donors, position);
+                    donor_landing_screen(donors, position, b);
                     break;
                 }
                 else {
@@ -473,7 +486,7 @@ vector<Donor>* donor_login(vector<Donor>* donors) {
         if (login != "exit") { //will only repeat the function if user hasn't entered "exit". "exit" will allow the user to return to the main menu if they don't know a registered email.
             cout << "\nEmail not found.\n\n";
             system("PAUSE");
-            donor_login(donors);
+            donor_login(donors, b);
         }
     }
 
@@ -823,9 +836,11 @@ int main()
     //declaring necessary variables
     vector<Donor> donors;
     vector<Recipient> recipients;
+    Booking bookings[248];
     ifstream myFile;
     Donor transactionD;
     Recipient transactionR;
+    Booking transactionB;
     string line;
 
     //opening Donors
@@ -920,14 +935,45 @@ int main()
 
     myFile.close();
 
-    //creating pointer for donors and recipients vectors
+    //opening bookings
+    linenum = 0;
+    myFile.open("bookings.csv", ios::in);
+
+    //Loop to take bookings input from file
+    while (getline(myFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        //Int Variables
+        getline(linestream, item, ',');
+        stringstream day(item);
+        day >> transactionB.day;
+
+        getline(linestream, item, ',');
+        stringstream time(item);
+        time >> transactionB.time;
+
+        getline(linestream, item, ',');
+        stringstream booked(item);
+        booked >> transactionB.booked;
+
+        //Add structure to array 'bookings'.
+        bookings[linenum] = transactionB;
+        linenum ++;
+    }
+
+    myFile.close();
+
+    //creating pointers
     vector<Donor>* ptrdonors = &donors;
     vector<Recipient>* ptrrecipients = &recipients;
+    Booking* ptrbookings = bookings;
 
     //INTRO MENU
     //****************
     bool flag = 0;
     int choice;
+
     while (flag == 0) {
         cout << "\n\t\t\t\t\tWELCOME TO CAPITAL BLOODBANK\n";
         cout << "************************************************************************************************************\n\n";
@@ -954,7 +1000,7 @@ int main()
             donor_registration(ptrdonors);
             break;
         case 4:
-            donor_login(ptrdonors);
+            donor_login(ptrdonors, ptrbookings);
             break;
         case 5:
             recipient_registration(ptrrecipients);
