@@ -105,48 +105,80 @@ void display_contact_info()
 }
 //****************
 void donors_contact_info() {
-    struct Donor donorinfo;
-    string name;
-    int i;
+    vector<Donor> donors;
+    vector<Recipient> recipients;
+    ifstream myFile;
+    Donor transactionD;
+    Recipient transactionR;
+    string line;
+
+    //opening Donors
+    int linenum = 0;
+    myFile.open("donors.csv", ios::in);
+
+    //Loop to take donor input from file
+    while (getline(myFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        //String variables
+        getline(linestream, item, ',');
+        transactionD.name = item;
+        getline(linestream, item, ',');
+        transactionD.password = item;
+        getline(linestream, item, ',');
+        transactionD.email = item;
+        getline(linestream, item, ',');
+        transactionD.bloodType = item;
+        getline(linestream, item, ',');
+        transactionD.streetAddress = item;
+        getline(linestream, item, ',');
+        transactionD.suburb = item;
+        getline(linestream, item, ',');
+        transactionD.city = item;
+        getline(linestream, item, ',');
+        transactionD.ethnicity = item;
+        getline(linestream, item, ',');
+        transactionD.gender = item;
+
+
+
+
+
+
+        cout << "\n";
+
+
+
+
+    }
+    cout << "\n";
     system("CLS");
-    cout<< "\n\t\t\t\t\t DONORS CONTACT INFO\n";
-        cout << "********************************************************************************************\n\n";
-        ifstream regToFile;
-        regToFile.open("donors.csv", ios::out );
-        for (i = 0; i < 3; i++) {
-            cout << "\n\t\t\t\t\tDONOR " << i + 1 << ":"<<endl;
-            cout << "-------------------------------------------------------------------------------------------\n\n";
-            cout << "\nNAME:"<<endl;
-            while (getline(regToFile, name)) {
+    string searchname;
+    cin.ignore();
+    cout << "\nENTER DONOR NAME TO FIND CONTACT INFO" << endl;
+    getline(cin, searchname);
 
-                cout << name;
+    if (transactionD.name == searchname) {
+        cout << "\nSTREET ADDRESS: " << transactionD.streetAddress;
+        cout << "\nEMAIL: " << transactionD.email << "\n" << endl;
 
-            }
-           
-           
-            cout << "\nEMAIL:"<<endl;
 
-            cout << "\nCONTACT NUMBER:"<<endl;
 
-            cout << "\nADDRESS:" << endl;
+    }
 
 
 
 
-        }
-       
-        
 
 
-        system("PAUSE");
-        system("CLS");
+    system("PAUSE");
+    system("CLS");
 
 
 
 
 }
-
-
 
 
 
