@@ -381,12 +381,66 @@ vector<Donor>* donor_manage_info(vector<Donor>* donors, int p) {
 
 Booking* book_donation(Booking* b) {
     system("CLS");
-    int day, hour;
+    int day, hour, i;
+    ofstream myFile;
     cout << "\n\tTAKING BOOKINGS FOR MONTH OF JULY 2021\n";
     cout << "******************************************************\n\n";
-    cout << "Enter Day:\t";
+
+    //taking user input for booking
+    cout << "Enter Day (enter 0 to return to menu screen):\t";
     cin >> day;
 
+    //checking if given day is valid
+    if (day == 0) {
+        return b;
+    }
+    else if (day > 31 || day < 1) {
+        cout << "\nInvalid Day. Please try again.\n";
+        system("PAUSE");
+        book_donation(b);
+    }
+    else {
+        cout << "\nThe following times are available of July " << day << ":\n";
+        //outputting available booking times
+        for (i = 0; i < 248; i++) {
+            if ((b+i)->day == day && (b+i)->booked == 0) {
+                cout << (b + i)->time << ":00" << endl;
+            }
+        }
+
+        //taking user input for booking time
+        cout << "\nPick one of the listed times by hour (eg. 9 or 14):\t";
+        cin >> hour;
+
+        //checking if given hour is valid
+        if (hour > 16 || hour < 9) {
+            cout << "\nInvalid Hour. Please try again.\n";
+            system("PAUSE");
+            book_donation(b);
+        }
+        else {
+            //finding record to edit
+            for (i = 0; i < 248; i++) {
+                if ((b + i)->day == day && (b + i)->time == hour) {
+                    if ((b + i)->booked == 0) { //Changes booked value in the timeslot to true.
+                        (b + i)->booked = 1;
+                        cout << "\nSuccessfully Booked for " << hour << ":00 on July " << day << endl;
+
+                        //rewriting bookings array to bookings.csv
+                        myFile.open("bookings.csv", ios::out);
+                        for (int j = 0; j < 248; j++) {
+                            myFile << (b + j)->day << ',' << (b + j)->time << ',' << (b + j)->booked << endl;
+                        }
+                        myFile.close();
+                    }
+                    else {
+                        cout << "\nThis time is already booked.\n";
+                    }
+                    break;
+                }
+            }
+        }
+    }
 
     system("PAUSE");
     system("CLS");
