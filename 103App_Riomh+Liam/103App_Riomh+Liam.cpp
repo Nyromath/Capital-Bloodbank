@@ -442,6 +442,7 @@ Booking* book_donation(Booking* b) {
         }
     }
 
+    cout << "\n";
     system("PAUSE");
     system("CLS");
     return b;
