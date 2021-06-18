@@ -103,6 +103,24 @@ void display_contact_info()
     system("PAUSE");
     system("CLS");
 }
+
+string update_detail_string(string attribute) { //small function to update string variables in donor and recipient screens, so as to avoid repeat code
+    string s;
+    //cin.ignore();
+    cout << "\nEnter New " << attribute << ":\t";
+    getline(cin, s);
+
+    return s;
+}
+
+int update_detail_int(string attribute) { //small function to update int variables in donor and recipient screens, so as to avoid repeat code
+    int i;
+    cout << "\nEnter New " << attribute << ":\t";
+    cin >> i;
+
+    return i;
+}
+
 //****************
 void donors_contact_info() {
     vector<Donor> donors;
@@ -193,16 +211,77 @@ void donors_contact_info() {
 
 
 
+vector<Recipient> recipient_manage_info(vector<Recipient> recip, int p) {
+    int n = 0, choice;
+    bool flag = 0;
 
+    //display current info and menu
+    while (flag == 0) {
+        system("CLS");
+        cout << "\nYour Current Info:\n\n";
+        cout << "1.\tName:\t\t" << recip[p].name << endl;
+        cout << "2.\tEmail:\t\t" << recip[p].email << endl;
+        cout << "3.\tPassword:\t" << recip[p].password << endl;
+        cout << "4.\tAddress:\t" << recip[p].streetAddress << ", " << recip[p].suburb << ", " << recip[p].city << endl;
+        cout << "5.\tContact Number:\t" << recip[p].contactNumber << endl;
+        cout << "6.\tExit\n\n";
 
+        //taking user input for editing info
+        cout << "Enter Menu Option to Edit Information:\t";
+        cin >> choice;
 
+        switch (choice) {
+        case 1:
+            cin.ignore();
+            recip[p].name = update_detail_string("Name");
+            break;
+        case 2:
+            cin.ignore();
+            recip[p].email = update_detail_string("Email");
+            break;
+        case 3:
+            cin.ignore();
+            recip[p].password = update_detail_string("Password");
+            break;
+        case 4:
+            cin.ignore();
+            recip[p].streetAddress = update_detail_string("Street Address");
+            recip[p].suburb = update_detail_string("Suburb");
+            recip[p].city = update_detail_string("City");
+            break;
+        case 5:
+            recip[p].contactNumber = update_detail_int("Contact Number");
+            break;
+        case 6:
+            flag = 1;
+            break;
+        default:
+            cout << "\nPlease enter a valid menu option.\n\n";
+            system("PAUSE");
+        }
+    }
 
+    //writing recipients back into file
+    ofstream myFile;
+    myFile.open("recipients.csv", ios::out);
 
+    for (auto element : recip) {
+        myFile << element.name << ',';
+        myFile << element.password << ',';
+        myFile << element.streetAddress << ',';
+        myFile << element.suburb << ',';
+        myFile << element.city << ',';
+        myFile << element.email << ',';
+        myFile << element.contactNumber << ',';
+        myFile << element.registrationNumber << endl;
+    }
 
+    myFile.close();
 
+    return recip;
+}
 
-
-vector<Recipient>* recipient_landing_screen(vector<Recipient>* recip) {
+vector<Recipient> recipient_landing_screen(vector<Recipient> recip, int p) {
     int choice;
     bool flag = 0;
 
@@ -214,7 +293,8 @@ vector<Recipient>* recipient_landing_screen(vector<Recipient>* recip) {
         cout << "1. Find potential donors by blood type \n";
         cout << "2. Find potential donors by location\n";
         cout << "3. Find donor contact info\n";
-        cout << "4. log out\n";
+        cout << "4. Manage my Information\n";
+        cout << "5. log out\n";
         cout << "Enter option Number:\n";
         cin >> choice;
 
@@ -231,8 +311,10 @@ vector<Recipient>* recipient_landing_screen(vector<Recipient>* recip) {
         case 3:
             donors_contact_info();
             break;
-
         case 4:
+            recip = recipient_manage_info(recip, p);
+            break;
+        case 5:
             flag = 1;
             system("CLS");
             break;
@@ -291,90 +373,99 @@ void donor_how_i_donate() {
 
 }
 
-string update_detail_string(string attribute) { //small function to update string variables in donor and recipient screens, so as to avoid repeat code
-    string s;
-    cin.ignore();
-    cout << "\nEnter New " << attribute << ":\t";
-    getline(cin, s);
 
-    return s;
-}
 
-int update_detail_int(string attribute) { //small function to update int variables in donor and recipient screens, so as to avoid repeat code
-    int i;
-    cout << "\nEnter New " << attribute << ":\t";
-    cin >> i;
-
-    return i;
-}
-
-vector<Donor>* donor_manage_info(vector<Donor>* donors, int p) {
+vector<Donor> donor_manage_info(vector<Donor> donors, int p) {
     int n = 0, choice;
     bool flag = 0;
+    
 
-    //display current info and menu. using auto for loop because no other direct method of pointing to the vector would work
-    for (auto element : *donors) {
-        if (n == p) {
-            while (flag == 0) {
-                system("CLS");
-                cout << "\nYour Current Info:\n\n";
-                cout << "1.\tName:\t\t" << element.name << endl;
-                cout << "2.\tEmail:\t\t" << element.email << endl;
-                cout << "3.\tPassword:\t" << element.password << endl;
-                cout << "4.\tAddress:\t" << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
-                cout << "5.\tContact Number:\t" << element.contactNumber << endl;
-                cout << "6.\tEthnicity:\t" << element.ethnicity << endl;
-                cout << "7.\tGender:\t\t" << element.gender << endl;
-                cout << "8.\tDate of Birth:\t" << element.dobDay << "/" << element.dobMonth << "/" << element.dobYear << endl;
-                cout << "9.\tExit\n\n";
+    //display current info and menu.
+    while (flag == 0) {
+        
+        system("CLS");
+        cout << "\nYour Current Info:\n\n";
+        cout << "1.\tName:\t\t" << donors[p].name << endl;
+        cout << "2.\tEmail:\t\t" << donors[p].email << endl;
+        cout << "3.\tPassword:\t" << donors[p].password << endl;
+        cout << "4.\tAddress:\t" << donors[p].streetAddress << ", " << donors[p].suburb << ", " << donors[p].city << endl;
+        cout << "5.\tContact Number:\t" << donors[p].contactNumber << endl;
+        cout << "6.\tEthnicity:\t" << donors[p].ethnicity << endl;
+        cout << "7.\tGender:\t\t" << donors[p].gender << endl;
+        cout << "8.\tDate of Birth:\t" << donors[p].dobDay << "/" << donors[p].dobMonth << "/" << donors[p].dobYear << endl;
+        cout << "9.\tExit\n\n";
 
-                //taking user input for editing info
-                cout << "Enter Menu Option to Edit Information:\t";
-                cin >> choice;
+        //taking user input for editing info
+        cout << "Enter Menu Option to Edit Information:\t";
+        cin >> choice;
 
-                switch (choice) {
-                case 1:
-                    element.name = update_detail_string("Name");
-                    break;
-                case 2:
-                    element.email = update_detail_string("Email");
-                    break;
-                case 3:
-                    element.password = update_detail_string("Password");
-                    break;
-                case 4:
-                    element.streetAddress = update_detail_string("Street Address");
-                    element.suburb = update_detail_string("Suburb");
-                    element.city = update_detail_string("City");
-                    break;
-                case 5:
-                    element.contactNumber = update_detail_int("Contact Number");
-                    break;
-                case 6:
-                    element.ethnicity = update_detail_string("Ethnicity");
-                    break;
-                case 7:
-                    element.gender = update_detail_string("Gender");
-                    break;
-                case 8:
-                    cout << "\nEnter new Date of Birth:\n";
-                    element.dobDay = update_detail_int("Day");
-                    element.dobMonth = update_detail_int("Month");
-                    element.dobYear = update_detail_int("Year");
-                    break;
-                case 9:
-                    flag = 1;
-                    return donors;
-                    break;
-                default:
-                    cout << "\nPlease enter a valid menu option.\n\n";
-                    system("PAUSE");
-                }
-            }
+        switch (choice) {
+        case 1:
+            cin.ignore();
+            donors[p].name = update_detail_string("Name");
+            break;
+        case 2:
+            cin.ignore();
+            donors[p].email = update_detail_string("Email");
+            break;
+        case 3:
+            cin.ignore();
+            donors[p].password = update_detail_string("Password");
+            break;
+        case 4:
+            cin.ignore();
+            donors[p].streetAddress = update_detail_string("Street Address");
+            donors[p].suburb = update_detail_string("Suburb");
+            donors[p].city = update_detail_string("City");
+            break;
+        case 5:
+            cin.ignore();
+            donors[p].contactNumber = update_detail_int("Contact Number");
+            break;
+        case 6:
+            cin.ignore();
+            donors[p].ethnicity = update_detail_string("Ethnicity");
+            break;
+        case 7:
+            cin.ignore();
+            donors[p].gender = update_detail_string("Gender");
+            break;
+        case 8:
+            cout << "\nEnter new Date of Birth:\n";
+            donors[p].dobDay = update_detail_int("Day");
+            donors[p].dobMonth = update_detail_int("Month");
+            donors[p].dobYear = update_detail_int("Year");
+            break;
+        case 9:
+            flag = 1;
+            break;
+        default:
+            cout << "\nPlease enter a valid menu option.\n\n";
+            system("PAUSE");
         }
-
-        n++;
     }
+
+    //writing donors information back into donors file
+    ofstream myFile;
+    myFile.open("donors.csv", ios::out);
+
+    for (auto element : donors) {
+        myFile << element.name << ',';
+        myFile << element.password << ',';
+        myFile << element.email << ',';
+        myFile << element.bloodType << ',';
+        myFile << element.streetAddress << ',';
+        myFile << element.suburb << ',';
+        myFile << element.city << ',';
+        myFile << element.ethnicity << ',';
+        myFile << element.gender << ',';
+        myFile << element.contactNumber << ',';
+        myFile << element.dobDay << ',';
+        myFile << element.dobMonth << ',';
+        myFile << element.dobYear << endl;
+    }
+
+    myFile.close();
 
     return donors;
 }
@@ -448,7 +539,7 @@ Booking* book_donation(Booking* b) {
     return b;
 }
 
-vector<Donor>* donor_landing_screen(vector<Donor>* donors, int p, Booking* b) {
+vector<Donor> donor_landing_screen(vector<Donor> donors, int p, Booking* b) {
     int choice;
     bool flag = 0;
 
@@ -459,7 +550,7 @@ vector<Donor>* donor_landing_screen(vector<Donor>* donors, int p, Booking* b) {
 
         cout << "1. How do I donate blood?\n";
         cout << "2. What are the benefits of donating blood?\n";
-        cout << "3. Manage my information\n";
+        cout << "3. Manage my Information\n";
         cout << "4. Book a donation\n";
         cout << "5. log out\n";
         cout << "Enter option Number:\n";
@@ -475,7 +566,7 @@ vector<Donor>* donor_landing_screen(vector<Donor>* donors, int p, Booking* b) {
             break;
 
         case 3:
-            donor_manage_info(donors, p);
+            donors = donor_manage_info(donors, p);
             break;
         case 4:
             book_donation(b);
@@ -495,7 +586,7 @@ vector<Donor>* donor_landing_screen(vector<Donor>* donors, int p, Booking* b) {
     return donors;
 }
 
-vector<Donor>* donor_login(vector<Donor>* donors, Booking* b) {
+vector<Donor> donor_login(vector<Donor> donors, Booking* b) {
     system("CLS");
 
     //declaring necessary variables
@@ -509,7 +600,7 @@ vector<Donor>* donor_login(vector<Donor>* donors, Booking* b) {
     cout << "Enter Email (enter \"exit\" to return to menu):\t";
     cin >> login;
     //Validating email
-    for (auto element : *donors) {
+    for (auto element : donors) {
         if (login == element.email) {
             Eflag = 1;
             pword = element.password;
@@ -519,7 +610,7 @@ vector<Donor>* donor_login(vector<Donor>* donors, Booking* b) {
                 getline(cin, login);
 
                 if (login == pword) {
-                    donor_landing_screen(donors, position, b);
+                    donors = donor_landing_screen(donors, position, b);
                     break;
                 }
                 else {
@@ -563,7 +654,7 @@ vector<Donor>* donor_login(vector<Donor>* donors, Booking* b) {
     return donors;
 }
 
-vector<Donor>* donor_registration(vector<Donor>* donors) {
+vector<Donor> donor_registration(vector<Donor> donors) {
     system("CLS");
     //declaring donor struct to store details, and temp values for validating
     struct Donor reg;
@@ -681,7 +772,7 @@ vector<Donor>* donor_registration(vector<Donor>* donors) {
 
     regToFile.close();
 
-    (*donors).push_back(reg);
+    donors.push_back(reg);
 
     cout << "\nSuccessfully registered " << reg.name << " as Donor.\n\n";
 
@@ -691,7 +782,7 @@ vector<Donor>* donor_registration(vector<Donor>* donors) {
     return donors;
 }
 
-vector<Recipient>* recipient_login(vector<Recipient>* recip) {
+vector<Recipient> recipient_login(vector<Recipient> recip) {
     system("CLS");
 
     //declaring necessary variables
@@ -706,7 +797,7 @@ vector<Recipient>* recipient_login(vector<Recipient>* recip) {
     cin >> login;
 
     //Validating email
-    for (auto element : *recip) {
+    for (auto element : recip) {
         if (login == element.email) {
             Eflag = 1;
             pword = element.password;
@@ -716,7 +807,7 @@ vector<Recipient>* recipient_login(vector<Recipient>* recip) {
                 getline(cin, login);
 
                 if (login == pword) {
-                    recipient_landing_screen(recip);
+                    recip = recipient_landing_screen(recip, position);
                     break;
                 }
                 else {
@@ -1052,16 +1143,16 @@ int main()
             display_contact_info();
             break;
         case 3:
-            donor_registration(ptrdonors);
+            donors = donor_registration(donors);
             break;
         case 4:
-            donor_login(ptrdonors, ptrbookings);
+            donors = donor_login(donors, ptrbookings);
             break;
         case 5:
             recipient_registration(ptrrecipients);
             break;
         case 6:
-            recipient_login(ptrrecipients);
+            recipients = recipient_login(recipients);
             break;
         case 7:
             admin_landing_screen();
