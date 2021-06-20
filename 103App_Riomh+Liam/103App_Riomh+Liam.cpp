@@ -6,12 +6,13 @@
 #include <string>
 #include <stdlib.h>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 struct Donor {
     string name, password, email, bloodType, streetAddress, suburb, city, ethnicity, gender;
-    int contactNumber, dobDay, dobMonth, dobYear;
-    //vector<string> underlyingConditions; UNDERLYING CONDITIONS TO BE WORKED ON
+    int contactNumber, dobDay, dobMonth, dobYear, numOfConditions;
+    vector<string> underlyingConditions; //UNDERLYING CONDITIONS TO BE WORKED ON
 
     Donor(string s = " ", int i = 0) {
         name = s;
@@ -377,12 +378,12 @@ void donor_how_i_donate() {
 
 vector<Donor> donor_manage_info(vector<Donor> donors, int p) {
     int n = 0, choice;
-    bool flag = 0;
-    
+    bool flag = 0, flag2 = 0, foundCondition = 0;
+    string condition;
 
     //display current info and menu.
     while (flag == 0) {
-        
+
         system("CLS");
         cout << "\nYour Current Info:\n\n";
         cout << "1.\tName:\t\t" << donors[p].name << endl;
@@ -393,7 +394,8 @@ vector<Donor> donor_manage_info(vector<Donor> donors, int p) {
         cout << "6.\tEthnicity:\t" << donors[p].ethnicity << endl;
         cout << "7.\tGender:\t\t" << donors[p].gender << endl;
         cout << "8.\tDate of Birth:\t" << donors[p].dobDay << "/" << donors[p].dobMonth << "/" << donors[p].dobYear << endl;
-        cout << "9.\tExit\n\n";
+        cout << "9.\tManage Underlying Conditions" << endl;
+        cout << "10.\tExit\n\n";
 
         //taking user input for editing info
         cout << "Enter Menu Option to Edit Information:\t";
@@ -437,11 +439,80 @@ vector<Donor> donor_manage_info(vector<Donor> donors, int p) {
             donors[p].dobYear = update_detail_int("Year");
             break;
         case 9:
+            while (flag2 == 0) {
+                system("CLS");
+                foundCondition = 0;
+                cout << "\nYour Underlying Conditions:\n\n";
+                if (donors[p].underlyingConditions.size() == 0) { //Checking if user has underlying conditions to output
+                    cout << "You do not have any underlying conditions.\n\n";
+                }
+                else {
+                    for (auto element : donors[p].underlyingConditions) {
+                        cout << element << endl;
+                    }
+                    cout << endl;
+                }
+
+                //Add or Remove conditions menu
+                cout << "1.\tAdd Condition\n";
+                cout << "2.\tRemove Condition\n";
+                cout << "3.\tBack to Menu\n\n";
+                cout << "Enter Option Number:\t";
+                cin >> choice;
+
+                switch (choice) {
+                case 1:
+                    cin.ignore();
+                    donors[p].underlyingConditions.push_back(update_detail_string("Condition"));
+                    donors[p].numOfConditions++;
+                    break;
+                case 2:
+                    if (donors[p].underlyingConditions.size() == 0) {
+                        //Exits remove condition menu if user has no conditions
+                        cout << "\nYou have no conditions to remove.\n\n";
+                        system("PAUSE");
+                    }
+                    else {
+                        cout << "\nEnter Condition to remove:\t";
+                        cin.ignore();
+                        getline(cin, condition);
+
+                        //Loop to find entered condition and remove if found
+                        for (int i = 0; i < donors[p].underlyingConditions.size(); i++) {
+                            if (donors[p].underlyingConditions[i] == condition) {
+                                donors[p].underlyingConditions.erase(donors[p].underlyingConditions.begin() + i);
+                                foundCondition = 1;
+                                break;
+                            }
+                        }
+
+                        //checking if input was found and removes
+                        if (foundCondition == 1) {
+                            cout << "\nCondition \"" << condition << "\" Removed.\n\n";
+                            donors[p].numOfConditions--;
+                        }
+                        else {
+                            cout << "\nCondition \"" << condition << "\" Not Found.\n\n";
+                        }
+                        system("PAUSE");
+                    }
+                    break;
+                case 3:
+                    flag2 = 1;
+                    break;
+                default:
+                    cout << "\nPlease enter a valid menu option.\n\n";
+                    system("PAUSE");
+                }
+            }
+            break;
+        case 10:
             flag = 1;
             break;
         default:
             cout << "\nPlease enter a valid menu option.\n\n";
             system("PAUSE");
+            
         }
     }
 
@@ -462,7 +533,20 @@ vector<Donor> donor_manage_info(vector<Donor> donors, int p) {
         myFile << element.contactNumber << ',';
         myFile << element.dobDay << ',';
         myFile << element.dobMonth << ',';
-        myFile << element.dobYear << endl;
+        myFile << element.dobYear << ',';
+        myFile << element.numOfConditions << endl;
+    }
+
+    myFile.close();
+
+    myFile.open("conditions.csv", ios::out);
+
+    for (auto element : donors) {
+        myFile << element.email << ',';
+        for (auto element : element.underlyingConditions) {
+            myFile << element << ',';
+        }
+        myFile << endl;
     }
 
     myFile.close();
@@ -658,8 +742,9 @@ vector<Donor> donor_registration(vector<Donor> donors) {
     system("CLS");
     //declaring donor struct to store details, and temp values for validating
     struct Donor reg;
-    string tempPW1, tempPW2, tempGender;
+    string tempPW1, tempPW2, tempGender, condition;
     bool flag = 0;
+    char conditionCheck;
 
     //taking user input for donor
     cout << "\tREGISTER AS DONOR\n";
@@ -667,11 +752,25 @@ vector<Donor> donor_registration(vector<Donor> donors) {
     cin.ignore();
     cout << "Enter Full Name:\t";
     getline(cin, reg.name);
-    cout << "Enter Email:\t\t";
-    cin >> reg.email;
+    //do while loop to ensure no duplicate emails
+    do {
+        cout << "Enter Email:\t\t";
+        getline(cin, reg.email);
+
+        for (auto element : donors) {
+            if (reg.email == element.email) {
+                cout << "This email is already registered. Please use a different email.\n";
+                flag = 1;
+                break;
+            }
+            else {
+                flag = 0;
+            }
+        }
+    } while (flag == 1);
+
     //do while loop to confirm user's password
     do {
-        cin.ignore();
         cout << "Enter Password:\t\t";
         getline(cin, tempPW1);
         cout << "Confirm Password:\t";
@@ -731,17 +830,19 @@ vector<Donor> donor_registration(vector<Donor> donors) {
     cout << "Enter Blood Type:\t"; //Blood type does not yet check for valid blood type. Will not prevent someone having the blood type "Banana", for example.
     cin >> reg.bloodType;
 
-    //UNDERLYING CONDITIONS TO BE WORKED ON
-    /*do {
-        cout << "Do you have any underlying conditions? (y/n):\t";
+    //Underlying Conditions
+    do {
+        cout << "Do you have any underlying conditions to enter? (y/n):\t";
         cin >> conditionCheck;
         conditionCheck = tolower(conditionCheck);
 
         if (conditionCheck == 'y') {
+            cin.ignore();
             cout << "Enter Condition:\t";
             getline(cin, condition);
             reg.underlyingConditions.push_back(condition);
-
+            reg.numOfConditions++;
+            flag = 1;
         }
         else if (conditionCheck == 'n') {
             flag = 0;
@@ -750,7 +851,7 @@ vector<Donor> donor_registration(vector<Donor> donors) {
             cout << "Please enter y or n\n";
             flag = 1;
         }
-    } while (flag == 1);*/
+    } while (flag == 1);
 
     //Registering user data to csv file
     ofstream regToFile;
@@ -768,7 +869,19 @@ vector<Donor> donor_registration(vector<Donor> donors) {
     regToFile << reg.contactNumber << ",";
     regToFile << reg.dobDay << ",";
     regToFile << reg.dobMonth << ",";
-    regToFile << reg.dobYear << endl;
+    regToFile << reg.dobYear << ",";
+    regToFile << reg.numOfConditions << endl;
+
+    regToFile.close();
+
+    //Registering conditions to csv file
+    regToFile.open("conditions.csv", ios::app);
+
+    regToFile << reg.email << ',';
+    for (auto element : reg.underlyingConditions) {
+        regToFile << element << ',';
+    }
+    regToFile << endl;
 
     regToFile.close();
 
@@ -987,7 +1100,7 @@ int main()
     Donor transactionD;
     Recipient transactionR;
     Booking transactionB;
-    string line;
+    string line, donorEmail;
 
     //opening Donors
     int linenum = 0;
@@ -1034,6 +1147,10 @@ int main()
         getline(linestream, item, ',');
         stringstream year(item);
         year >> transactionD.dobYear;
+
+        getline(linestream, item, ',');
+        stringstream num(item);
+        num >> transactionD.numOfConditions;
 
         //Add structure to vector 'donors'.
         donors.push_back(transactionD);
@@ -1106,6 +1223,30 @@ int main()
         //Add structure to array 'bookings'.
         bookings[linenum] = transactionB;
         linenum ++;
+    }
+
+    myFile.close();
+
+    //opening conditions
+    linenum = 0;
+    myFile.open("conditions.csv", ios::in);
+
+    //Loop to take conditions input from file
+    while (getline(myFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        getline(linestream, item, ',');
+        donorEmail = item;
+
+        for (int i = 0; i < donors.size(); i++) {
+            if (donors[i].email == donorEmail) {
+                for (int j = 0; j < donors[i].numOfConditions; j++) {
+                    getline(linestream, item, ',');
+                    donors[i].underlyingConditions.push_back(item);
+                }
+            }
+        }
     }
 
     myFile.close();

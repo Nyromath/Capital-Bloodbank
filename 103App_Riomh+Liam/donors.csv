@@ -1,4 +1,5 @@
-John Smith,passw0rd,john.smith@gmail.com,O+,17 Hartford Cres,Totara Park,Upper Hutt,NZ European,Male,211205959,18,6,1978
-liam,mmmhhhjjk,lia.liamm@yahoo.com,b+,67 hutt road lower hutt,petone,wellington,pakeha,Male,90876765,25,2,2003
-Alan Jones,ajones1980,jonesalan@hotmail.com,A-,1013 Long Road,Extenderlee,Lower Hutt,NZ European,Male,211238987,30,7,1980
-Donor McDonorson,d0n0r,donor@gmail.com,O-,10 Donor Sreet,Donorsville,Donoropolis,Donor,Other,9,15,7,2001
+John Smith,passw0rd,john.smith@gmail.com,O+,17 Hartford Cres,Totara Park,Upper Hutt,NZ European,Male,211205959,18,6,1978,0
+liam,mmmhhhjjk,lia.liamm@yahoo.com,b+,67 hutt road lower hutt,petone,wellington,pakeha,Male,90876765,25,2,2003,0
+Alan Jones,ajones1980,jonesalan@hotmail.com,A-,1013 Long Road,Extenderlee,Lower Hutt,NZ European,Male,211238987,30,7,1980,1
+Donor McDonorson,d0n0r,donor@gmail.com,O-,10 Donor Sreet,Donorsville,Donoropolis,Donor,Other,9,15,7,2001,0
+Test McGee,test,test.com,AB+,189 Testing Way,Teston,Testopolis,Robot,Other,101010101,1,1,1970,2
