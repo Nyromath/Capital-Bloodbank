@@ -6,12 +6,13 @@
 #include <string>
 #include <stdlib.h>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 struct Donor {
     string name, password, email, bloodType, streetAddress, suburb, city, ethnicity, gender;
-    int contactNumber, dobDay, dobMonth, dobYear;
-    //vector<string> underlyingConditions; UNDERLYING CONDITIONS TO BE WORKED ON
+    int contactNumber, dobDay, dobMonth, dobYear, numOfConditions;
+    vector<string> underlyingConditions; //UNDERLYING CONDITIONS TO BE WORKED ON
 
     Donor(string s = " ", int i = 0) {
         name = s;
@@ -103,6 +104,24 @@ void display_contact_info()
     system("PAUSE");
     system("CLS");
 }
+
+string update_detail_string(string attribute) { //small function to update string variables in donor and recipient screens, so as to avoid repeat code
+    string s;
+    //cin.ignore();
+    cout << "\nEnter New " << attribute << ":\t";
+    getline(cin, s);
+
+    return s;
+}
+
+int update_detail_int(string attribute) { //small function to update int variables in donor and recipient screens, so as to avoid repeat code
+    int i;
+    cout << "\nEnter New " << attribute << ":\t";
+    cin >> i;
+
+    return i;
+}
+
 //****************
 void donors_contact_info() {
     vector<Donor> donors;
@@ -442,16 +461,77 @@ void donors_by_location() {
 
 
 
+vector<Recipient> recipient_manage_info(vector<Recipient> recip, int p) {
+    int n = 0, choice;
+    bool flag = 0;
 
+    //display current info and menu
+    while (flag == 0) {
+        system("CLS");
+        cout << "\nYour Current Info:\n\n";
+        cout << "1.\tName:\t\t" << recip[p].name << endl;
+        cout << "2.\tEmail:\t\t" << recip[p].email << endl;
+        cout << "3.\tPassword:\t" << recip[p].password << endl;
+        cout << "4.\tAddress:\t" << recip[p].streetAddress << ", " << recip[p].suburb << ", " << recip[p].city << endl;
+        cout << "5.\tContact Number:\t" << recip[p].contactNumber << endl;
+        cout << "6.\tExit\n\n";
 
+        //taking user input for editing info
+        cout << "Enter Menu Option to Edit Information:\t";
+        cin >> choice;
 
+        switch (choice) {
+        case 1:
+            cin.ignore();
+            recip[p].name = update_detail_string("Name");
+            break;
+        case 2:
+            cin.ignore();
+            recip[p].email = update_detail_string("Email");
+            break;
+        case 3:
+            cin.ignore();
+            recip[p].password = update_detail_string("Password");
+            break;
+        case 4:
+            cin.ignore();
+            recip[p].streetAddress = update_detail_string("Street Address");
+            recip[p].suburb = update_detail_string("Suburb");
+            recip[p].city = update_detail_string("City");
+            break;
+        case 5:
+            recip[p].contactNumber = update_detail_int("Contact Number");
+            break;
+        case 6:
+            flag = 1;
+            break;
+        default:
+            cout << "\nPlease enter a valid menu option.\n\n";
+            system("PAUSE");
+        }
+    }
 
+    //writing recipients back into file
+    ofstream myFile;
+    myFile.open("recipients.csv", ios::out);
 
+    for (auto element : recip) {
+        myFile << element.name << ',';
+        myFile << element.password << ',';
+        myFile << element.streetAddress << ',';
+        myFile << element.suburb << ',';
+        myFile << element.city << ',';
+        myFile << element.email << ',';
+        myFile << element.contactNumber << ',';
+        myFile << element.registrationNumber << endl;
+    }
 
+    myFile.close();
 
+    return recip;
+}
 
-
-vector<Recipient>* recipient_landing_screen(vector<Recipient>* recip) {
+vector<Recipient> recipient_landing_screen(vector<Recipient> recip, int p) {
     int choice;
     bool flag = 0;
 
@@ -463,7 +543,8 @@ vector<Recipient>* recipient_landing_screen(vector<Recipient>* recip) {
         cout << "1. Find potential donors by blood type \n";
         cout << "2. Find potential donors by city\n";
         cout << "3. Find donor contact info\n";
-        cout << "4. log out\n";
+        cout << "4. Manage my Information\n";
+        cout << "5. log out\n";
         cout << "Enter option Number:\n";
         cin >> choice;
 
@@ -480,8 +561,10 @@ vector<Recipient>* recipient_landing_screen(vector<Recipient>* recip) {
         case 3:
             donors_contact_info();
             break;
-
         case 4:
+            recip = recipient_manage_info(recip, p);
+            break;
+        case 5:
             flag = 1;
             system("CLS");
             break;
@@ -540,90 +623,182 @@ void donor_how_i_donate() {
 
 }
 
-string update_detail_string(string attribute) { //small function to update string variables in donor and recipient screens, so as to avoid repeat code
-    string s;
-    cin.ignore();
-    cout << "\nEnter New " << attribute << ":\t";
-    getline(cin, s);
 
-    return s;
-}
 
-int update_detail_int(string attribute) { //small function to update int variables in donor and recipient screens, so as to avoid repeat code
-    int i;
-    cout << "\nEnter New " << attribute << ":\t";
-    cin >> i;
-
-    return i;
-}
-
-vector<Donor>* donor_manage_info(vector<Donor>* donors, int p) {
+vector<Donor> donor_manage_info(vector<Donor> donors, int p) {
     int n = 0, choice;
-    bool flag = 0;
+    bool flag = 0, flag2 = 0, foundCondition = 0;
+    string condition;
 
-    //display current info and menu. using auto for loop because no other direct method of pointing to the vector would work
-    for (auto element : *donors) {
-        if (n == p) {
-            while (flag == 0) {
+    //display current info and menu.
+    while (flag == 0) {
+
+        system("CLS");
+        cout << "\nYour Current Info:\n\n";
+        cout << "1.\tName:\t\t" << donors[p].name << endl;
+        cout << "2.\tEmail:\t\t" << donors[p].email << endl;
+        cout << "3.\tPassword:\t" << donors[p].password << endl;
+        cout << "4.\tAddress:\t" << donors[p].streetAddress << ", " << donors[p].suburb << ", " << donors[p].city << endl;
+        cout << "5.\tContact Number:\t" << donors[p].contactNumber << endl;
+        cout << "6.\tEthnicity:\t" << donors[p].ethnicity << endl;
+        cout << "7.\tGender:\t\t" << donors[p].gender << endl;
+        cout << "8.\tDate of Birth:\t" << donors[p].dobDay << "/" << donors[p].dobMonth << "/" << donors[p].dobYear << endl;
+        cout << "9.\tManage Underlying Conditions" << endl;
+        cout << "10.\tExit\n\n";
+
+        //taking user input for editing info
+        cout << "Enter Menu Option to Edit Information:\t";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            cin.ignore();
+            donors[p].name = update_detail_string("Name");
+            break;
+        case 2:
+            cin.ignore();
+            donors[p].email = update_detail_string("Email");
+            break;
+        case 3:
+            cin.ignore();
+            donors[p].password = update_detail_string("Password");
+            break;
+        case 4:
+            cin.ignore();
+            donors[p].streetAddress = update_detail_string("Street Address");
+            donors[p].suburb = update_detail_string("Suburb");
+            donors[p].city = update_detail_string("City");
+            break;
+        case 5:
+            cin.ignore();
+            donors[p].contactNumber = update_detail_int("Contact Number");
+            break;
+        case 6:
+            cin.ignore();
+            donors[p].ethnicity = update_detail_string("Ethnicity");
+            break;
+        case 7:
+            cin.ignore();
+            donors[p].gender = update_detail_string("Gender");
+            break;
+        case 8:
+            cout << "\nEnter new Date of Birth:\n";
+            donors[p].dobDay = update_detail_int("Day");
+            donors[p].dobMonth = update_detail_int("Month");
+            donors[p].dobYear = update_detail_int("Year");
+            break;
+        case 9:
+            while (flag2 == 0) {
                 system("CLS");
-                cout << "\nYour Current Info:\n\n";
-                cout << "1.\tName:\t\t" << element.name << endl;
-                cout << "2.\tEmail:\t\t" << element.email << endl;
-                cout << "3.\tPassword:\t" << element.password << endl;
-                cout << "4.\tAddress:\t" << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
-                cout << "5.\tContact Number:\t" << element.contactNumber << endl;
-                cout << "6.\tEthnicity:\t" << element.ethnicity << endl;
-                cout << "7.\tGender:\t\t" << element.gender << endl;
-                cout << "8.\tDate of Birth:\t" << element.dobDay << "/" << element.dobMonth << "/" << element.dobYear << endl;
-                cout << "9.\tExit\n\n";
+                foundCondition = 0;
+                cout << "\nYour Underlying Conditions:\n\n";
+                if (donors[p].underlyingConditions.size() == 0) { //Checking if user has underlying conditions to output
+                    cout << "You do not have any underlying conditions.\n\n";
+                }
+                else {
+                    for (auto element : donors[p].underlyingConditions) {
+                        cout << element << endl;
+                    }
+                    cout << endl;
+                }
 
-                //taking user input for editing info
-                cout << "Enter Menu Option to Edit Information:\t";
+                //Add or Remove conditions menu
+                cout << "1.\tAdd Condition\n";
+                cout << "2.\tRemove Condition\n";
+                cout << "3.\tBack to Menu\n\n";
+                cout << "Enter Option Number:\t";
                 cin >> choice;
 
                 switch (choice) {
                 case 1:
-                    element.name = update_detail_string("Name");
+                    cin.ignore();
+                    donors[p].underlyingConditions.push_back(update_detail_string("Condition"));
+                    donors[p].numOfConditions++;
                     break;
                 case 2:
-                    element.email = update_detail_string("Email");
+                    if (donors[p].underlyingConditions.size() == 0) {
+                        //Exits remove condition menu if user has no conditions
+                        cout << "\nYou have no conditions to remove.\n\n";
+                        system("PAUSE");
+                    }
+                    else {
+                        cout << "\nEnter Condition to remove:\t";
+                        cin.ignore();
+                        getline(cin, condition);
+
+                        //Loop to find entered condition and remove if found
+                        for (int i = 0; i < donors[p].underlyingConditions.size(); i++) {
+                            if (donors[p].underlyingConditions[i] == condition) {
+                                donors[p].underlyingConditions.erase(donors[p].underlyingConditions.begin() + i);
+                                foundCondition = 1;
+                                break;
+                            }
+                        }
+
+                        //checking if input was found and removes
+                        if (foundCondition == 1) {
+                            cout << "\nCondition \"" << condition << "\" Removed.\n\n";
+                            donors[p].numOfConditions--;
+                        }
+                        else {
+                            cout << "\nCondition \"" << condition << "\" Not Found.\n\n";
+                        }
+                        system("PAUSE");
+                    }
                     break;
                 case 3:
-                    element.password = update_detail_string("Password");
-                    break;
-                case 4:
-                    element.streetAddress = update_detail_string("Street Address");
-                    element.suburb = update_detail_string("Suburb");
-                    element.city = update_detail_string("City");
-                    break;
-                case 5:
-                    element.contactNumber = update_detail_int("Contact Number");
-                    break;
-                case 6:
-                    element.ethnicity = update_detail_string("Ethnicity");
-                    break;
-                case 7:
-                    element.gender = update_detail_string("Gender");
-                    break;
-                case 8:
-                    cout << "\nEnter new Date of Birth:\n";
-                    element.dobDay = update_detail_int("Day");
-                    element.dobMonth = update_detail_int("Month");
-                    element.dobYear = update_detail_int("Year");
-                    break;
-                case 9:
-                    flag = 1;
-                    return donors;
+                    flag2 = 1;
                     break;
                 default:
                     cout << "\nPlease enter a valid menu option.\n\n";
                     system("PAUSE");
                 }
             }
+            break;
+        case 10:
+            flag = 1;
+            break;
+        default:
+            cout << "\nPlease enter a valid menu option.\n\n";
+            system("PAUSE");
+            
         }
-
-        n++;
     }
+
+    //writing donors information back into donors file
+    ofstream myFile;
+    myFile.open("donors.csv", ios::out);
+
+    for (auto element : donors) {
+        myFile << element.name << ',';
+        myFile << element.password << ',';
+        myFile << element.email << ',';
+        myFile << element.bloodType << ',';
+        myFile << element.streetAddress << ',';
+        myFile << element.suburb << ',';
+        myFile << element.city << ',';
+        myFile << element.ethnicity << ',';
+        myFile << element.gender << ',';
+        myFile << element.contactNumber << ',';
+        myFile << element.dobDay << ',';
+        myFile << element.dobMonth << ',';
+        myFile << element.dobYear << ',';
+        myFile << element.numOfConditions << endl;
+    }
+
+    myFile.close();
+
+    myFile.open("conditions.csv", ios::out);
+
+    for (auto element : donors) {
+        myFile << element.email << ',';
+        for (auto element : element.underlyingConditions) {
+            myFile << element << ',';
+        }
+        myFile << endl;
+    }
+
+    myFile.close();
 
     return donors;
 }
@@ -691,12 +866,13 @@ Booking* book_donation(Booking* b) {
         }
     }
 
+    cout << "\n";
     system("PAUSE");
     system("CLS");
     return b;
 }
 
-vector<Donor>* donor_landing_screen(vector<Donor>* donors, int p, Booking* b) {
+vector<Donor> donor_landing_screen(vector<Donor> donors, int p, Booking* b) {
     int choice;
     bool flag = 0;
 
@@ -707,7 +883,7 @@ vector<Donor>* donor_landing_screen(vector<Donor>* donors, int p, Booking* b) {
 
         cout << "1. How do I donate blood?\n";
         cout << "2. What are the benefits of donating blood?\n";
-        cout << "3. Manage my information\n";
+        cout << "3. Manage my Information\n";
         cout << "4. Book a donation\n";
         cout << "5. log out\n";
         cout << "Enter option Number:\n";
@@ -723,7 +899,7 @@ vector<Donor>* donor_landing_screen(vector<Donor>* donors, int p, Booking* b) {
             break;
 
         case 3:
-            donor_manage_info(donors, p);
+            donors = donor_manage_info(donors, p);
             break;
         case 4:
             book_donation(b);
@@ -743,7 +919,7 @@ vector<Donor>* donor_landing_screen(vector<Donor>* donors, int p, Booking* b) {
     return donors;
 }
 
-vector<Donor>* donor_login(vector<Donor>* donors, Booking* b) {
+vector<Donor> donor_login(vector<Donor> donors, Booking* b) {
     system("CLS");
 
     //declaring necessary variables
@@ -757,7 +933,7 @@ vector<Donor>* donor_login(vector<Donor>* donors, Booking* b) {
     cout << "Enter Email (enter \"exit\" to return to menu):\t";
     cin >> login;
     //Validating email
-    for (auto element : *donors) {
+    for (auto element : donors) {
         if (login == element.email) {
             Eflag = 1;
             pword = element.password;
@@ -767,7 +943,7 @@ vector<Donor>* donor_login(vector<Donor>* donors, Booking* b) {
                 getline(cin, login);
 
                 if (login == pword) {
-                    donor_landing_screen(donors, position, b);
+                    donors = donor_landing_screen(donors, position, b);
                     break;
                 }
                 else {
@@ -811,12 +987,13 @@ vector<Donor>* donor_login(vector<Donor>* donors, Booking* b) {
     return donors;
 }
 
-vector<Donor>* donor_registration(vector<Donor>* donors) {
+vector<Donor> donor_registration(vector<Donor> donors) {
     system("CLS");
     //declaring donor struct to store details, and temp values for validating
     struct Donor reg;
-    string tempPW1, tempPW2, tempGender;
+    string tempPW1, tempPW2, tempGender, condition;
     bool flag = 0;
+    char conditionCheck;
 
     //taking user input for donor
     cout << "\tREGISTER AS DONOR\n";
@@ -824,11 +1001,25 @@ vector<Donor>* donor_registration(vector<Donor>* donors) {
     cin.ignore();
     cout << "Enter Full Name:\t";
     getline(cin, reg.name);
-    cout << "Enter Email:\t\t";
-    cin >> reg.email;
+    //do while loop to ensure no duplicate emails
+    do {
+        cout << "Enter Email:\t\t";
+        getline(cin, reg.email);
+
+        for (auto element : donors) {
+            if (reg.email == element.email) {
+                cout << "This email is already registered. Please use a different email.\n";
+                flag = 1;
+                break;
+            }
+            else {
+                flag = 0;
+            }
+        }
+    } while (flag == 1);
+
     //do while loop to confirm user's password
     do {
-        cin.ignore();
         cout << "Enter Password:\t\t";
         getline(cin, tempPW1);
         cout << "Confirm Password:\t";
@@ -888,17 +1079,19 @@ vector<Donor>* donor_registration(vector<Donor>* donors) {
     cout << "Enter Blood Type:\t"; //Blood type does not yet check for valid blood type. Will not prevent someone having the blood type "Banana", for example.
     cin >> reg.bloodType;
 
-    //UNDERLYING CONDITIONS TO BE WORKED ON
-    /*do {
-        cout << "Do you have any underlying conditions? (y/n):\t";
+    //Underlying Conditions
+    do {
+        cout << "Do you have any underlying conditions to enter? (y/n):\t";
         cin >> conditionCheck;
         conditionCheck = tolower(conditionCheck);
 
         if (conditionCheck == 'y') {
+            cin.ignore();
             cout << "Enter Condition:\t";
             getline(cin, condition);
             reg.underlyingConditions.push_back(condition);
-
+            reg.numOfConditions++;
+            flag = 1;
         }
         else if (conditionCheck == 'n') {
             flag = 0;
@@ -907,7 +1100,7 @@ vector<Donor>* donor_registration(vector<Donor>* donors) {
             cout << "Please enter y or n\n";
             flag = 1;
         }
-    } while (flag == 1);*/
+    } while (flag == 1);
 
     //Registering user data to csv file
     ofstream regToFile;
@@ -925,11 +1118,23 @@ vector<Donor>* donor_registration(vector<Donor>* donors) {
     regToFile << reg.contactNumber << ",";
     regToFile << reg.dobDay << ",";
     regToFile << reg.dobMonth << ",";
-    regToFile << reg.dobYear << endl;
+    regToFile << reg.dobYear << ",";
+    regToFile << reg.numOfConditions << endl;
 
     regToFile.close();
 
-    (*donors).push_back(reg);
+    //Registering conditions to csv file
+    regToFile.open("conditions.csv", ios::app);
+
+    regToFile << reg.email << ',';
+    for (auto element : reg.underlyingConditions) {
+        regToFile << element << ',';
+    }
+    regToFile << endl;
+
+    regToFile.close();
+
+    donors.push_back(reg);
 
     cout << "\nSuccessfully registered " << reg.name << " as Donor.\n\n";
 
@@ -939,7 +1144,7 @@ vector<Donor>* donor_registration(vector<Donor>* donors) {
     return donors;
 }
 
-vector<Recipient>* recipient_login(vector<Recipient>* recip) {
+vector<Recipient> recipient_login(vector<Recipient> recip) {
     system("CLS");
 
     //declaring necessary variables
@@ -954,7 +1159,7 @@ vector<Recipient>* recipient_login(vector<Recipient>* recip) {
     cin >> login;
 
     //Validating email
-    for (auto element : *recip) {
+    for (auto element : recip) {
         if (login == element.email) {
             Eflag = 1;
             pword = element.password;
@@ -964,7 +1169,7 @@ vector<Recipient>* recipient_login(vector<Recipient>* recip) {
                 getline(cin, login);
 
                 if (login == pword) {
-                    recipient_landing_screen(recip);
+                    recip = recipient_landing_screen(recip, position);
                     break;
                 }
                 else {
@@ -1358,12 +1563,14 @@ int main()
     //declaring necessary variables
     vector<Donor> donors;
     vector<Recipient> recipients;
+    vector<Admin> admins;
     Booking bookings[248];
     ifstream myFile;
     Donor transactionD;
     Recipient transactionR;
+    Admin transactionA;
     Booking transactionB;
-    string line;
+    string line, donorEmail;
 
     //opening Donors
     int linenum = 0;
@@ -1410,6 +1617,10 @@ int main()
         getline(linestream, item, ',');
         stringstream year(item);
         year >> transactionD.dobYear;
+
+        getline(linestream, item, ',');
+        stringstream num(item);
+        num >> transactionD.numOfConditions;
 
         //Add structure to vector 'donors'.
         donors.push_back(transactionD);
@@ -1486,6 +1697,48 @@ int main()
 
     myFile.close();
 
+    //opening conditions
+    linenum = 0;
+    myFile.open("conditions.csv", ios::in);
+
+    //Loop to take conditions input from file
+    while (getline(myFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        getline(linestream, item, ',');
+        donorEmail = item;
+
+        for (int i = 0; i < donors.size(); i++) {
+            if (donors[i].email == donorEmail) {
+                for (int j = 0; j < donors[i].numOfConditions; j++) {
+                    getline(linestream, item, ',');
+                    donors[i].underlyingConditions.push_back(item);
+                }
+            }
+        }
+    }
+
+    myFile.close();
+
+    //opening admin
+    linenum = 0;
+    myFile.open("admin.csv", ios::in);
+
+    while (getline(myFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        getline(linestream, item, ',');
+        transactionA.email = item;
+        getline(linestream, item, ',');
+        transactionA.password = item;
+
+        linenum++;
+    }
+
+    myFile.close();
+
     //creating pointers
     vector<Donor>* ptrdonors = &donors;
     vector<Recipient>* ptrrecipients = &recipients;
@@ -1519,16 +1772,16 @@ int main()
             display_contact_info();
             break;
         case 3:
-            donor_registration(ptrdonors);
+            donors = donor_registration(donors);
             break;
         case 4:
-            donor_login(ptrdonors, ptrbookings);
+            donors = donor_login(donors, ptrbookings);
             break;
         case 5:
             recipient_registration(ptrrecipients);
             break;
         case 6:
-            recipient_login(ptrrecipients);
+            recipients = recipient_login(recipients);
             break;
         case 7:
             admin_landing_screen();
