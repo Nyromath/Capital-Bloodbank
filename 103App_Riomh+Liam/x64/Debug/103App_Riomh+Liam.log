@@ -1,1 +1,6 @@
-﻿  103App_Riomh+Liam.vcxproj -> C:\Users\270121836\OneDrive - UP Education\Desktop\Capital-Bloodbank\103App_Riomh+Liam\x64\Debug\103App_Riomh+Liam.exe
+﻿  103App_Riomh+Liam.cpp
+C:\Users\270121836\OneDrive - UP Education\Desktop\Capital-Bloodbank\103App_Riomh+Liam\103App_Riomh+Liam.cpp(1659,1): error C2059: syntax error: '}'
+C:\Users\270121836\OneDrive - UP Education\Desktop\Capital-Bloodbank\103App_Riomh+Liam\103App_Riomh+Liam.cpp(1659,1): error C2143: syntax error: missing ';' before '}'
+C:\Users\270121836\OneDrive - UP Education\Desktop\Capital-Bloodbank\103App_Riomh+Liam\103App_Riomh+Liam.cpp(1665,25): error C2143: syntax error: missing ';' before '{'
+C:\Users\270121836\OneDrive - UP Education\Desktop\Capital-Bloodbank\103App_Riomh+Liam\103App_Riomh+Liam.cpp(1665,25): error C2447: '{': missing function header (old-style formal list?)
+C:\Users\270121836\OneDrive - UP Education\Desktop\Capital-Bloodbank\103App_Riomh+Liam\103App_Riomh+Liam.cpp(1719,13): error C3861: 'bloodgroup_report': identifier not found

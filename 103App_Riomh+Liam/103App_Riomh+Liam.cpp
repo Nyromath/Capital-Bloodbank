@@ -75,8 +75,8 @@ void intro_function() {
     cout << "\n\t\t\t\t\tABOUT US\n";
     cout << "********************************************************************************************\n\n";
     cout << "\tCapital Blood Bank is a New Zealand based bloodbank with locations across the north and south island.\n";
-    cout << "\tas a blood bank we have been running for over 25 years obtaining over 100,000 liters of blood\n";
-    cout << "\tthe blood is sent to all local centers to use for those who require it\n";
+    cout << "\tAs a blood bank we have been running for over 25 years obtaining over 100,000 liters of blood\n";
+    cout << "\tthe blood is then  sent to all local centers to use for those who require it.\n";
     cout << "\tWe ask that those who are able to donate blood to donate it as many people in New Zealand need blood\n";
     cout << "\tIf you are interested in donating blood or are in need of blood please register and contact us for more info\n";
     cout << "\tIf you are unsure if you are eligable to donate blood please call us or email us to book a time at one of\n";
@@ -201,7 +201,7 @@ void donors_contact_info() {
             if (element.name == searchname) {
                 system("CLS");
                 cout << "-----------------------------------------------------" << endl;
-                cout << "\t\t" << element.name << endl;
+                cout << "\t\t" << element.name<< endl;
                 cout << "-----------------------------------------------------" << endl;
                 cout << "\nSTREET ADDRESS: " << element.streetAddress<<", "<<element.suburb<<", "<<element.city<<endl;
                 cout << "\nEMAIL: " << element.email << endl;
@@ -409,7 +409,7 @@ void donors_by_location() {
     system("CLS");
     string searchcity;
     cin.ignore();
-    cout << "\nENTER CITY NAME TO SEARCH FOR DONORS" << endl;
+    cout << "\nENTER CITY NAME TO SEARCH FOR DONORS " << endl;
     cout << "******************************************************" << endl;
     getline(cin, searchcity);
 
@@ -537,7 +537,7 @@ vector<Recipient> recipient_landing_screen(vector<Recipient> recip, int p) {
 
     while (flag == 0) {
         system("CLS");
-        cout << "\n\t\t\t\t\tWELCOME RECIPIENT\n";
+        cout << "\n\t\t\t\t\tWELCOME RECIPIENT \n";
         cout << "************************************************************************************************************\n\n";
 
         cout << "1. Find potential donors by blood type \n";
@@ -550,7 +550,7 @@ vector<Recipient> recipient_landing_screen(vector<Recipient> recip, int p) {
 
         switch (choice) {
         case 1:
-
+                                                                                                         
             donors_by_blood();
 
             break;
@@ -1288,6 +1288,7 @@ void admin_recipient_report() {
     Recipient transactionR;
     Booking transactionB;
     string line;
+    
     int flag = 0;
 
 
@@ -1389,6 +1390,172 @@ void admin_donor_report() {
     vector<Donor> donors;
     vector<Recipient> recipients;
     ifstream myFile;
+    ifstream conditionFile;
+    Donor transactionD;
+    Recipient transactionR;
+    string line;
+    string donorEmail;
+    int flag = 0;
+
+    //opening Donors
+    int linenum = 0;
+    myFile.open("donors.csv", ios::in);
+
+    //Loop to take donor input from file
+    while (getline(myFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        //String variables
+        getline(linestream, item, ',');
+        transactionD.name = item;
+        getline(linestream, item, ',');
+        transactionD.password = item;
+        getline(linestream, item, ',');
+        transactionD.email = item;
+        getline(linestream, item, ',');
+        transactionD.bloodType = item;
+        getline(linestream, item, ',');
+        transactionD.streetAddress = item;
+        getline(linestream, item, ',');
+        transactionD.suburb = item;
+        getline(linestream, item, ',');
+        transactionD.city = item;
+        getline(linestream, item, ',');
+        transactionD.ethnicity = item;
+        getline(linestream, item, ',');
+        transactionD.gender = item;
+
+
+
+
+
+        //Int Variables
+        getline(linestream, item, ',');
+        stringstream ss(item);
+        ss >> transactionD.contactNumber;
+
+        getline(linestream, item, ',');
+        stringstream day(item);
+        day >> transactionD.dobDay;
+
+        getline(linestream, item, ',');
+        stringstream month(item);
+        month >> transactionD.dobMonth;
+
+        getline(linestream, item, ',');
+        stringstream year(item);
+        year >> transactionD.dobYear;
+
+        getline(linestream, item, ',');
+        stringstream num(item);
+        num >> transactionD.numOfConditions;
+
+        //Add structure to vector 'donors'.
+        donors.push_back(transactionD);
+        linenum++;
+
+      
+
+    }
+   
+  
+
+
+    //opening conditions
+    linenum = 0;
+    conditionFile.open("conditions.csv", ios::in);
+
+    //Loop to take conditions input from file
+    while (getline(conditionFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        getline(linestream, item, ',');
+        donorEmail = item;
+
+        for (int i = 0; i < donors.size(); i++) {
+            if (donors[i].email == donorEmail) {
+                for (int j = 0; j < donors[i].numOfConditions; j++) {
+                    getline(linestream, item, ',');
+                    donors[i].underlyingConditions.push_back(item);
+                }
+            }
+        }
+    }
+
+    conditionFile.close();
+    myFile.close();
+
+
+
+
+
+    system("CLS");
+    string searchname;
+    cin.ignore();
+    cout << "\nENTER DONORS NAME TO FIND REPORT" << endl;
+    cout << "******************************************************" << endl;
+    getline(cin, searchname);
+    system("CLS");
+
+
+    for (auto element : donors) {
+        if (element.name == searchname) {
+
+            cout << "-----------------------------------------------------" << endl;
+            cout << "\t\t" << element.name << endl;
+            cout << "-----------------------------------------------------" << endl;
+            cout << "\nBLOOD TYPE: " << element.bloodType<<endl;
+            cout << "\nSTREET ADDRESS: " << element.streetAddress<<endl;
+            cout << "\nEMAIL: " << element.email << endl;
+            cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
+            cout << "\nDATE OF BIRTH: " << element.dobDay << "/" << element.dobMonth << "/" << element.dobYear<<endl;
+            cout << "\nGENDER: " << element.gender << endl;
+            cout << "\nETHNICITY: " << element.ethnicity << endl;
+
+
+            if (element.underlyingConditions.size() == 0) { //Checking if user has underlying conditions to output
+             cout <<element.name <<"DOES NOT HAVE ANY UNDERLYING CONDITIONS \n\n"<<endl;
+            }
+            else {
+                for (auto element : element.underlyingConditions) {
+                    cout <<"\nUNDERLYING CONDITIONS: "<< element << endl;
+                }
+                cout << endl;
+            }
+           
+
+
+            flag = 1;
+
+        }
+
+    }
+
+    if (flag == 0) {
+        cout << "\n";
+        cout << "THERE ARE NO REPORTS WITH THE NAME: " << searchname << endl;
+
+
+
+    }
+
+
+    cout << "\n";
+    system("PAUSE");
+    system("CLS");
+}
+
+
+
+
+
+void location_report() {
+
+    vector<Donor> donors;
+    vector<Recipient> recipients;
+    ifstream myFile;
     Donor transactionD;
     Recipient transactionR;
     string line;
@@ -1425,9 +1592,6 @@ void admin_donor_report() {
 
 
 
-
-
-
         //Int Variables
         getline(linestream, item, ',');
         stringstream ss(item);
@@ -1452,49 +1616,63 @@ void admin_donor_report() {
 
     myFile.close();
 
+
     system("CLS");
-    string searchname;
+    string searchcity;
     cin.ignore();
-    cout << "\nENTER DONORS NAME TO FIND REPORT" << endl;
+    cout << "\nENTER CITY NAME TO SEARCH FOR DONOR REPORTS" << endl;
     cout << "******************************************************" << endl;
-    getline(cin, searchname);
-    system("CLS");
+    getline(cin, searchcity);
+
 
 
     for (auto element : donors) {
-        if (element.name == searchname) {
-
+        if (element.city == searchcity) {
             cout << "-----------------------------------------------------" << endl;
             cout << "\t\t" << element.name << endl;
             cout << "-----------------------------------------------------" << endl;
-            cout << "\nBLOOD TYPE: " << element.bloodType<<endl;
-            cout << "\nSTREET ADDRESS: " << element.streetAddress<<endl;
+            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << element.city << endl;
             cout << "\nEMAIL: " << element.email << endl;
             cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
-            cout << "\nDATE OF BIRTH: " << element.dobDay << "/" << element.dobMonth << "/" << element.dobYear<<endl;
-            cout << "\nGENDER: " << element.gender << endl;
-            cout << "\nETHNICITY: " << element.ethnicity << endl;
-
-
+            cout << "\nBLOOD TYPE: " << element.bloodType << endl;
             flag = 1;
+            system("PAUSE");
+
 
         }
-
     }
 
     if (flag == 0) {
-        cout << "\n";
-        cout << "THERE ARE NO REPORTS WITH THE NAME: " << searchname << endl;
 
-
+        cout << "THERE ARE NO REPORTS OF DONORS THAT LIVE IN: " << searchcity << endl;
+        system("PAUSE");
 
     }
 
 
-    cout << "\n";
-    system("PAUSE");
+
     system("CLS");
+
 }
+
+
+}
+
+
+
+
+
+void bloodgroup_report(){
+
+
+
+
+
+
+}
+
+
+
 
 
 void admin_landing_screen()
@@ -1505,6 +1683,7 @@ void admin_landing_screen()
     while (flag == 0)
        
     {
+     
         system("CLS");
         cout << "\n\t\t\t\t\tWELCOME ADMIN \n";
         cout << "************************************************************************************************************\n\n";
@@ -1512,7 +1691,9 @@ void admin_landing_screen()
         cout << "1. view donor's report\n";
         cout << "2. view Recipient report \n";
         cout << "3. Update donor blood testing report \n";
-        cout << "4. Logout\n";
+        cout << "4. Location report \n";
+        cout << "5. Blood group report\n";
+        cout << "6. Logout\n";
          cout << "Enter Option Number:\t";
         cin >> choice;
 
@@ -1530,6 +1711,20 @@ void admin_landing_screen()
             
             break;
         case 4:
+            location_report();
+
+
+            break;
+        case 5:
+            bloodgroup_report();
+            break;
+
+
+
+
+
+
+        case 6:
             flag = 1;
             system("CLS");
            
