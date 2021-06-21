@@ -12,7 +12,7 @@ using namespace std;
 struct Donor {
     string name, password, email, bloodType, streetAddress, suburb, city, ethnicity, gender;
     int contactNumber, dobDay, dobMonth, dobYear, numOfConditions;
-    vector<string> underlyingConditions; //UNDERLYING CONDITIONS TO BE WORKED ON
+    vector<string> underlyingConditions;
 
     Donor(string s = " ", int i = 0) {
         name = s;
@@ -59,6 +59,7 @@ struct Admin {
 struct Booking {
     int day, time;
     bool booked;
+    string bookedBy;
 
     Booking(int i = 0, bool b = 0) {
         day = i;
@@ -810,10 +811,45 @@ vector<Donor> donor_manage_info(vector<Donor> donors, int p) {
     return donors;
 }
 
-Booking* book_donation(Booking* b) {
-    system("CLS");
+Booking* book_donation(Booking* b, string email) {
+    //declaring necessary variables
     int day, hour, i;
+    char choice;
     ofstream myFile;
+
+    //checking if user has already booked a donation
+    for (i = 0; i < 248; i++) {
+        if ((b + i)->bookedBy == email) {
+            cout << "\nYou already have a booking on July " << (b + i)->day << " at " << (b + i)->time << ":00. Would you like to cancel this booking? (y/n):\t";
+            cin >> choice;
+            choice = tolower(choice);
+
+            if (choice == 'y') {
+                (b + i)->booked = 0;
+                (b + i)->bookedBy = "";
+                cout << "\nBooking Cancelled.\n\n";
+            }
+            else if (choice == 'n') {
+                cout << "\nReturning to Menu.\n\n";
+            }
+            else {
+                cout << "Please enter y or n\n";
+                book_donation(b, email);
+            }
+
+            //rewriting bookings array to bookings.csv
+            myFile.open("bookings.csv", ios::out);
+            for (int j = 0; j < 248; j++) {
+                myFile << (b + j)->day << ',' << (b + j)->time << ',' << (b + j)->booked << ',' << (b + j)->bookedBy << endl;
+            }
+            myFile.close();
+
+            system("PAUSE");
+            return b;
+        }
+    }
+
+    system("CLS");
     cout << "\n\tTAKING BOOKINGS FOR MONTH OF JULY 2021\n";
     cout << "******************************************************\n\n";
 
@@ -828,7 +864,7 @@ Booking* book_donation(Booking* b) {
     else if (day > 31 || day < 1) {
         cout << "\nInvalid Day. Please try again.\n";
         system("PAUSE");
-        book_donation(b);
+        book_donation(b, email);
     }
     else {
         cout << "\nThe following times are available of July " << day << ":\n";
@@ -847,7 +883,7 @@ Booking* book_donation(Booking* b) {
         if (hour > 16 || hour < 9) {
             cout << "\nInvalid Hour. Please try again.\n";
             system("PAUSE");
-            book_donation(b);
+            book_donation(b, email);
         }
         else {
             //finding record to edit
@@ -855,12 +891,13 @@ Booking* book_donation(Booking* b) {
                 if ((b + i)->day == day && (b + i)->time == hour) {
                     if ((b + i)->booked == 0) { //Changes booked value in the timeslot to true.
                         (b + i)->booked = 1;
+                        (b + i)->bookedBy = email;
                         cout << "\nSuccessfully Booked for " << hour << ":00 on July " << day << endl;
 
                         //rewriting bookings array to bookings.csv
                         myFile.open("bookings.csv", ios::out);
                         for (int j = 0; j < 248; j++) {
-                            myFile << (b + j)->day << ',' << (b + j)->time << ',' << (b + j)->booked << endl;
+                            myFile << (b + j)->day << ',' << (b + j)->time << ',' << (b + j)->booked << ',' << (b+j)->bookedBy << endl;
                         }
                         myFile.close();
                     }
@@ -909,7 +946,7 @@ vector<Donor> donor_landing_screen(vector<Donor> donors, int p, Booking* b) {
             donors = donor_manage_info(donors, p);
             break;
         case 4:
-            book_donation(b);
+            book_donation(b, donors[p].email);
             break;
         case 5:
             flag = 1;
@@ -1929,6 +1966,10 @@ int main()
         getline(linestream, item, ',');
         stringstream booked(item);
         booked >> transactionB.booked;
+
+        //String Variable
+        getline(linestream, item, ',');
+        transactionB.bookedBy = item;
 
         //Add structure to array 'bookings'.
         bookings[linenum] = transactionB;
