@@ -1095,10 +1095,12 @@ int main()
     //declaring necessary variables
     vector<Donor> donors;
     vector<Recipient> recipients;
+    vector<Admin> admins;
     Booking bookings[248];
     ifstream myFile;
     Donor transactionD;
     Recipient transactionR;
+    Admin transactionA;
     Booking transactionB;
     string line, donorEmail;
 
@@ -1247,6 +1249,24 @@ int main()
                 }
             }
         }
+    }
+
+    myFile.close();
+
+    //opening admin
+    linenum = 0;
+    myFile.open("admin.csv", ios::in);
+
+    while (getline(myFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        getline(linestream, item, ',');
+        transactionA.email = item;
+        getline(linestream, item, ',');
+        transactionA.password = item;
+
+        linenum++;
     }
 
     myFile.close();
