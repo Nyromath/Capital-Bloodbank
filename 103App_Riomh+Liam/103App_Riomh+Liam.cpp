@@ -111,6 +111,7 @@ void donors_contact_info() {
     Donor transactionD;
     Recipient transactionR;
     string line;
+    int flag = 0;
 
     //opening Donors
     int linenum = 0;
@@ -142,43 +143,291 @@ void donors_contact_info() {
         transactionD.gender = item;
 
 
-        
 
+        //Int Variables
+        getline(linestream, item, ',');
+        stringstream ss(item);
+        ss >> transactionD.contactNumber;
 
+        getline(linestream, item, ',');
+        stringstream day(item);
+        day >> transactionD.dobDay;
 
-        cout << "\n";
+        getline(linestream, item, ',');
+        stringstream month(item);
+        month >> transactionD.dobMonth;
 
+        getline(linestream, item, ',');
+        stringstream year(item);
+        year >> transactionD.dobYear;
 
-
-
+        //Add structure to vector 'donors'.
+        donors.push_back(transactionD);
+        linenum++;
     }
-    cout << "\n";
+
+    myFile.close();
+
+
     system("CLS");
     string searchname;
     cin.ignore();
     cout << "\nENTER DONOR NAME TO FIND CONTACT INFO" << endl;
+    cout << "******************************************************"<<endl;
     getline(cin, searchname);
 
-        if (transactionD.name == searchname) {
-            cout << "\nSTREET ADDRESS: " << transactionD.streetAddress;
-            cout << "\nEMAIL: " << transactionD.email << "\n" << endl;
+    
 
+        for (auto element : donors) {
+            if (element.name == searchname) {
+                system("CLS");
+                cout << "-----------------------------------------------------" << endl;
+                cout << "\t\t" << element.name << endl;
+                cout << "-----------------------------------------------------" << endl;
+                cout << "\nSTREET ADDRESS: " << element.streetAddress<<", "<<element.suburb<<", "<<element.city<<endl;
+                cout << "\nEMAIL: " << element.email << endl;
+                cout << "\nCONTACT NUMBER: " << element.contactNumber<< endl;
+                cout << "\nBLOOD TYPE: " << element.bloodType << endl;
+                flag = 1;
+                system("PAUSE");
+                            }
+
+}
+
+        if (flag == 0) {
+            system("CLS");
+            cout << "THERE ARE NO DONORS FOUND WITH THAT NAME"<<endl;
+            system("PAUSE");
 
 
         }
 
-
-
-
-
-
-    system("PAUSE");
-    system("CLS");
-
-
-
+system("CLS");
 
 }
+
+
+
+void donors_by_blood() {
+
+    vector<Donor> donors;
+    vector<Recipient> recipients;
+    ifstream myFile;
+    Donor transactionD;
+    Recipient transactionR;
+    string line;
+    int flag = 0;
+
+    //opening Donors
+    int linenum = 0;
+    myFile.open("donors.csv", ios::in);
+
+    //Loop to take donor input from file
+    while (getline(myFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        //String variables
+        getline(linestream, item, ',');
+        transactionD.name = item;
+        getline(linestream, item, ',');
+        transactionD.password = item;
+        getline(linestream, item, ',');
+        transactionD.email = item;
+        getline(linestream, item, ',');
+        transactionD.bloodType = item;
+        getline(linestream, item, ',');
+        transactionD.streetAddress = item;
+        getline(linestream, item, ',');
+        transactionD.suburb = item;
+        getline(linestream, item, ',');
+        transactionD.city = item;
+        getline(linestream, item, ',');
+        transactionD.ethnicity = item;
+        getline(linestream, item, ',');
+        transactionD.gender = item;
+
+
+
+        //Int Variables
+        getline(linestream, item, ',');
+        stringstream ss(item);
+        ss >> transactionD.contactNumber;
+
+        getline(linestream, item, ',');
+        stringstream day(item);
+        day >> transactionD.dobDay;
+
+        getline(linestream, item, ',');
+        stringstream month(item);
+        month >> transactionD.dobMonth;
+
+        getline(linestream, item, ',');
+        stringstream year(item);
+        year >> transactionD.dobYear;
+
+        //Add structure to vector 'donors'.
+        donors.push_back(transactionD);
+        linenum++;
+    }
+
+    myFile.close();
+
+
+    system("CLS");
+    string searchblood;
+    cin.ignore();
+    cout << "\nENTER BLOOD TYPE TO SEARCH FOR DONORS" << endl;
+    cout << "******************************************************" << endl;
+    getline(cin, searchblood);
+
+
+
+    for (auto element : donors) {
+        if (element.bloodType == searchblood) {
+            cout << "-----------------------------------------------------" << endl;
+            cout<<"\t\t" << element.name<<endl;
+            cout << "-----------------------------------------------------"<<endl;
+            
+            cout << "\nSTREET ADDRESS: " << element.streetAddress<<", "<<element.suburb<<", "<<element.city<<endl;
+            cout << "\nEMAIL: " << element.email << endl;
+            cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
+            cout << "\nBLOOD TYPE: " << element.bloodType << endl;
+            flag = 1;
+            system("PAUSE");
+        }
+    }
+
+    if (flag == 0) {
+        system("CLS");
+        cout << "THERE ARE NO DONORS WITH BLOOD TYPE: " << searchblood << endl;
+        system("PAUSE");
+    }
+
+
+   
+    system("CLS");
+
+}
+
+
+
+
+
+
+
+
+
+
+
+void donors_by_location() {
+
+
+    vector<Donor> donors;
+    vector<Recipient> recipients;
+    ifstream myFile;
+    Donor transactionD;
+    Recipient transactionR;
+    string line;
+    int flag = 0;
+
+    //opening Donors
+    int linenum = 0;
+    myFile.open("donors.csv", ios::in);
+
+    //Loop to take donor input from file
+    while (getline(myFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        //String variables
+        getline(linestream, item, ',');
+        transactionD.name = item;
+        getline(linestream, item, ',');
+        transactionD.password = item;
+        getline(linestream, item, ',');
+        transactionD.email = item;
+        getline(linestream, item, ',');
+        transactionD.bloodType = item;
+        getline(linestream, item, ',');
+        transactionD.streetAddress = item;
+        getline(linestream, item, ',');
+        transactionD.suburb = item;
+        getline(linestream, item, ',');
+        transactionD.city = item;
+        getline(linestream, item, ',');
+        transactionD.ethnicity = item;
+        getline(linestream, item, ',');
+        transactionD.gender = item;
+
+
+
+        //Int Variables
+        getline(linestream, item, ',');
+        stringstream ss(item);
+        ss >> transactionD.contactNumber;
+
+        getline(linestream, item, ',');
+        stringstream day(item);
+        day >> transactionD.dobDay;
+
+        getline(linestream, item, ',');
+        stringstream month(item);
+        month >> transactionD.dobMonth;
+
+        getline(linestream, item, ',');
+        stringstream year(item);
+        year >> transactionD.dobYear;
+
+        //Add structure to vector 'donors'.
+        donors.push_back(transactionD);
+        linenum++;
+    }
+
+    myFile.close();
+
+
+    system("CLS");
+    string searchcity;
+    cin.ignore();
+    cout << "\nENTER CITY NAME TO SEARCH FOR DONORS" << endl;
+    cout << "******************************************************" << endl;
+    getline(cin, searchcity);
+
+
+
+    for (auto element : donors) {
+        if (element.city == searchcity) {
+            cout << "-----------------------------------------------------" << endl;
+            cout << "\t\t" << element.name << endl;
+            cout << "-----------------------------------------------------" << endl;
+            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << element.city << endl;
+            cout << "\nEMAIL: " << element.email << endl;
+            cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
+            cout << "\nBLOOD TYPE: " << element.bloodType << endl;
+            flag = 1;
+            system("PAUSE");
+        
+        
+        }
+    }
+
+    if (flag == 0) {
+
+        cout << "THERE ARE NO DONORS THAT LIVE IN: " << searchcity<<endl;
+        system("PAUSE");
+       
+    }
+
+
+    
+    system("CLS");
+
+}
+
+
+
+
 
 
 
@@ -212,7 +461,7 @@ vector<Recipient>* recipient_landing_screen(vector<Recipient>* recip) {
         cout << "************************************************************************************************************\n\n";
 
         cout << "1. Find potential donors by blood type \n";
-        cout << "2. Find potential donors by location\n";
+        cout << "2. Find potential donors by city\n";
         cout << "3. Find donor contact info\n";
         cout << "4. log out\n";
         cout << "Enter option Number:\n";
@@ -221,11 +470,11 @@ vector<Recipient>* recipient_landing_screen(vector<Recipient>* recip) {
         switch (choice) {
         case 1:
 
-            //donors_by_blood();
+            donors_by_blood();
 
             break;
         case 2:
-            //donors_by_location();
+            donors_by_location();
             break;
 
         case 3:
@@ -825,6 +1074,222 @@ vector<Recipient>* recipient_registration(vector<Recipient>* recip) {
 
 
 
+void admin_recipient_report() {
+    vector<Donor> donors;
+    vector<Recipient> recipients;
+    Booking bookings[248];
+    ifstream myFile;
+    Donor transactionD;
+    Recipient transactionR;
+    Booking transactionB;
+    string line;
+    int flag = 0;
+
+
+
+    int linenum = 0;
+    myFile.open("recipients.csv", ios::in);
+
+    //Loop to take recipient input from file
+    while (getline(myFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        //String variables
+        getline(linestream, item, ',');
+        transactionR.name = item;
+        getline(linestream, item, ',');
+        transactionR.password = item;
+        getline(linestream, item, ',');
+        transactionR.streetAddress = item;
+        getline(linestream, item, ',');
+        transactionR.suburb = item;
+        getline(linestream, item, ',');
+        transactionR.city = item;
+        getline(linestream, item, ',');
+        transactionR.email = item;
+
+        //Int Variables
+        getline(linestream, item, ',');
+        stringstream ss(item);
+        ss >> transactionR.contactNumber;
+
+        getline(linestream, item, ',');
+        stringstream rn(item);
+        rn >> transactionR.registrationNumber;
+
+        //Add structure to vector 'recipients'.
+        recipients.push_back(transactionR);
+        linenum++;
+    }
+
+    myFile.close();
+
+
+    system("CLS");
+    string searchname;
+    cin.ignore();
+    cout << "\nENTER RECIPIENTS NAME TO FIND REPORT" << endl;
+    cout << "******************************************************" << endl;
+    getline(cin, searchname);
+    system("CLS");
+
+
+    for (auto element : recipients) {
+        if (element.name == searchname) {
+           
+            cout << "-----------------------------------------------------" << endl;
+            cout << "\t\t" << element.name << endl;
+            cout << "-----------------------------------------------------" << endl;
+            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << element.city << endl;
+            cout << "\nEMAIL: " << element.email << endl;
+            cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
+            cout << "\nREGISTRATION NUMBER: " << element.registrationNumber<<endl;
+
+
+
+
+            flag = 1;
+            
+        }
+
+    }
+
+    if (flag == 0) {
+       
+        cout << "THERE ARE NO REPORTS WITH THE NAME: " << searchname << endl;
+ 
+
+
+    }
+
+
+    cout << "\n";
+    system("PAUSE");
+    system("CLS");
+
+
+
+
+}
+
+
+
+
+
+
+
+void admin_donor_report() {
+
+    vector<Donor> donors;
+    vector<Recipient> recipients;
+    ifstream myFile;
+    Donor transactionD;
+    Recipient transactionR;
+    string line;
+    int flag = 0;
+
+    //opening Donors
+    int linenum = 0;
+    myFile.open("donors.csv", ios::in);
+
+    //Loop to take donor input from file
+    while (getline(myFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        //String variables
+        getline(linestream, item, ',');
+        transactionD.name = item;
+        getline(linestream, item, ',');
+        transactionD.password = item;
+        getline(linestream, item, ',');
+        transactionD.email = item;
+        getline(linestream, item, ',');
+        transactionD.bloodType = item;
+        getline(linestream, item, ',');
+        transactionD.streetAddress = item;
+        getline(linestream, item, ',');
+        transactionD.suburb = item;
+        getline(linestream, item, ',');
+        transactionD.city = item;
+        getline(linestream, item, ',');
+        transactionD.ethnicity = item;
+        getline(linestream, item, ',');
+        transactionD.gender = item;
+
+
+
+
+
+
+        //Int Variables
+        getline(linestream, item, ',');
+        stringstream ss(item);
+        ss >> transactionD.contactNumber;
+
+        getline(linestream, item, ',');
+        stringstream day(item);
+        day >> transactionD.dobDay;
+
+        getline(linestream, item, ',');
+        stringstream month(item);
+        month >> transactionD.dobMonth;
+
+        getline(linestream, item, ',');
+        stringstream year(item);
+        year >> transactionD.dobYear;
+
+        //Add structure to vector 'donors'.
+        donors.push_back(transactionD);
+        linenum++;
+    }
+
+    myFile.close();
+
+    system("CLS");
+    string searchname;
+    cin.ignore();
+    cout << "\nENTER DONORS NAME TO FIND REPORT" << endl;
+    cout << "******************************************************" << endl;
+    getline(cin, searchname);
+    system("CLS");
+
+
+    for (auto element : donors) {
+        if (element.name == searchname) {
+
+            cout << "-----------------------------------------------------" << endl;
+            cout << "\t\t" << element.name << endl;
+            cout << "-----------------------------------------------------" << endl;
+            cout << "\nBLOOD TYPE: " << element.bloodType<<endl;
+            cout << "\nSTREET ADDRESS: " << element.streetAddress<<endl;
+            cout << "\nEMAIL: " << element.email << endl;
+            cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
+            cout << "\nDATE OF BIRTH: " << element.dobDay << "/" << element.dobMonth << "/" << element.dobYear<<endl;
+            cout << "\nGENDER: " << element.gender << endl;
+            cout << "\nETHNICITY: " << element.ethnicity << endl;
+
+
+            flag = 1;
+
+        }
+
+    }
+
+    if (flag == 0) {
+        cout << "\n";
+        cout << "THERE ARE NO REPORTS WITH THE NAME: " << searchname << endl;
+
+
+
+    }
+
+
+    cout << "\n";
+    system("PAUSE");
+    system("CLS");
+}
 
 
 void admin_landing_screen()
@@ -849,9 +1314,12 @@ void admin_landing_screen()
         switch (choice) {
         case 1:
           
+            admin_donor_report();
+
+
             break;
         case 2:
-           
+            admin_recipient_report();
             break;
         case 3:
             
