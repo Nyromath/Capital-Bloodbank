@@ -6,13 +6,13 @@
 #include <string>
 #include <stdlib.h>
 #include <vector>
-#include <algorithm>
+#include <tuple>
 using namespace std;
 
 struct Donor {
     string name, password, email, bloodType, streetAddress, suburb, city, ethnicity, gender;
     int contactNumber, dobDay, dobMonth, dobYear, numOfConditions;
-    vector<string> underlyingConditions; //UNDERLYING CONDITIONS TO BE WORKED ON
+    vector<string> underlyingConditions;
 
     Donor(string s = " ", int i = 0) {
         name = s;
@@ -59,12 +59,19 @@ struct Admin {
 struct Booking {
     int day, time;
     bool booked;
+    string bookedBy;
 
     Booking(int i = 0, bool b = 0) {
         day = i;
         time = i;
         booked = b;
     }
+};
+
+struct OmniStruct {
+    vector<Donor> d;
+    vector<Recipient> r;
+    vector<Admin> a;
 };
 
 //INFO FUNCTION
@@ -754,6 +761,7 @@ vector<Donor> donor_manage_info(vector<Donor> donors, int p) {
                     system("PAUSE");
                 }
             }
+            flag2 = 0;
             break;
         case 10:
             flag = 1;
@@ -803,10 +811,45 @@ vector<Donor> donor_manage_info(vector<Donor> donors, int p) {
     return donors;
 }
 
-Booking* book_donation(Booking* b) {
-    system("CLS");
+Booking* book_donation(Booking* b, string email) {
+    //declaring necessary variables
     int day, hour, i;
+    char choice;
     ofstream myFile;
+
+    //checking if user has already booked a donation
+    for (i = 0; i < 248; i++) {
+        if ((b + i)->bookedBy == email) {
+            cout << "\nYou already have a booking on July " << (b + i)->day << " at " << (b + i)->time << ":00. Would you like to cancel this booking? (y/n):\t";
+            cin >> choice;
+            choice = tolower(choice);
+
+            if (choice == 'y') {
+                (b + i)->booked = 0;
+                (b + i)->bookedBy = "";
+                cout << "\nBooking Cancelled.\n\n";
+            }
+            else if (choice == 'n') {
+                cout << "\nReturning to Menu.\n\n";
+            }
+            else {
+                cout << "Please enter y or n\n";
+                book_donation(b, email);
+            }
+
+            //rewriting bookings array to bookings.csv
+            myFile.open("bookings.csv", ios::out);
+            for (int j = 0; j < 248; j++) {
+                myFile << (b + j)->day << ',' << (b + j)->time << ',' << (b + j)->booked << ',' << (b + j)->bookedBy << endl;
+            }
+            myFile.close();
+
+            system("PAUSE");
+            return b;
+        }
+    }
+
+    system("CLS");
     cout << "\n\tTAKING BOOKINGS FOR MONTH OF JULY 2021\n";
     cout << "******************************************************\n\n";
 
@@ -821,7 +864,7 @@ Booking* book_donation(Booking* b) {
     else if (day > 31 || day < 1) {
         cout << "\nInvalid Day. Please try again.\n";
         system("PAUSE");
-        book_donation(b);
+        book_donation(b, email);
     }
     else {
         cout << "\nThe following times are available of July " << day << ":\n";
@@ -840,7 +883,7 @@ Booking* book_donation(Booking* b) {
         if (hour > 16 || hour < 9) {
             cout << "\nInvalid Hour. Please try again.\n";
             system("PAUSE");
-            book_donation(b);
+            book_donation(b, email);
         }
         else {
             //finding record to edit
@@ -848,12 +891,13 @@ Booking* book_donation(Booking* b) {
                 if ((b + i)->day == day && (b + i)->time == hour) {
                     if ((b + i)->booked == 0) { //Changes booked value in the timeslot to true.
                         (b + i)->booked = 1;
+                        (b + i)->bookedBy = email;
                         cout << "\nSuccessfully Booked for " << hour << ":00 on July " << day << endl;
 
                         //rewriting bookings array to bookings.csv
                         myFile.open("bookings.csv", ios::out);
                         for (int j = 0; j < 248; j++) {
-                            myFile << (b + j)->day << ',' << (b + j)->time << ',' << (b + j)->booked << endl;
+                            myFile << (b + j)->day << ',' << (b + j)->time << ',' << (b + j)->booked << ',' << (b+j)->bookedBy << endl;
                         }
                         myFile.close();
                     }
@@ -902,7 +946,7 @@ vector<Donor> donor_landing_screen(vector<Donor> donors, int p, Booking* b) {
             donors = donor_manage_info(donors, p);
             break;
         case 4:
-            book_donation(b);
+            book_donation(b, donors[p].email);
             break;
         case 5:
             flag = 1;
@@ -1496,10 +1540,185 @@ void admin_donor_report() {
     system("CLS");
 }
 
-
-void admin_landing_screen()
+vector<Donor> admin_update_donor(vector<Donor> donors)
 {
-    
+    system("CLS");
+
+    //declaring neccessary variables
+    string search = "";
+    bool flag = 0, flag2 = 0, foundCondition = 0;
+    int p = 0, choice;
+    string condition;
+
+    //Searching for donor to update by name
+    cout << "\n\tSEARCH FOR DONOR BY NAME\n";
+    cout << "****************************************\n\n";
+    cout << "Enter Donor Name (enter \"exit\" to return to menu):\t";
+    getline(cin, search);
+    cout << search;
+
+    if (search == "exit") {
+        return donors;
+    }
+    else {
+        for (auto element : donors) {
+            if (search == element.name) {
+                flag = 1;
+                break;
+            }
+            p++;
+        }
+    }
+
+    //Checking if donor was found
+    if (flag == 0) {
+        cout << "\nDonor not found.\n\n";
+        system("PAUSE");
+        admin_update_donor(donors);
+    }
+    else {
+        //Update menu if donor found
+        flag = 0;
+        while (flag == 0) {
+            system("CLS");
+            cout << "\n\t" << donors[p].name << endl;
+            cout << "*************************************\n\n";
+            cout << "1.\tBlood Type:\t" << donors[p].bloodType << endl;
+            cout << "2.\tManage Underlying Conditions" << endl;
+            cout << "3.\tExit\n\n";
+            cout << "Enter Option Number to Update:\t";
+            cin >> choice;
+
+            switch (choice) {
+            case 1:
+                cin.ignore();
+                donors[p].bloodType = update_detail_string("Blood Type");
+                break;
+            case 2:
+                while (flag2 == 0) {
+                    system("CLS");
+                    foundCondition = 0;
+                    cout << "\nYour Underlying Conditions:\n\n";
+                    if (donors[p].underlyingConditions.size() == 0) { //Checking if user has underlying conditions to output
+                        cout << "You do not have any underlying conditions.\n\n";
+                    }
+                    else {
+                        for (auto element : donors[p].underlyingConditions) {
+                            cout << element << endl;
+                        }
+                        cout << endl;
+                    }
+
+                    //Add or Remove conditions menu
+                    cout << "1.\tAdd Condition\n";
+                    cout << "2.\tRemove Condition\n";
+                    cout << "3.\tBack to Menu\n\n";
+                    cout << "Enter Option Number:\t";
+                    cin >> choice;
+
+                    switch (choice) {
+                    case 1:
+                        cin.ignore();
+                        donors[p].underlyingConditions.push_back(update_detail_string("Condition"));
+                        donors[p].numOfConditions++;
+                        break;
+                    case 2:
+                        if (donors[p].underlyingConditions.size() == 0) {
+                            //Exits remove condition menu if user has no conditions
+                            cout << "\nYou have no conditions to remove.\n\n";
+                            system("PAUSE");
+                        }
+                        else {
+                            cout << "\nEnter Condition to remove:\t";
+                            cin.ignore();
+                            getline(cin, condition);
+
+                            //Loop to find entered condition and remove if found
+                            for (int i = 0; i < donors[p].underlyingConditions.size(); i++) {
+                                if (donors[p].underlyingConditions[i] == condition) {
+                                    donors[p].underlyingConditions.erase(donors[p].underlyingConditions.begin() + i);
+                                    foundCondition = 1;
+                                    break;
+                                }
+                            }
+
+                            //checking if input was found and removes
+                            if (foundCondition == 1) {
+                                cout << "\nCondition \"" << condition << "\" Removed.\n\n";
+                                donors[p].numOfConditions--;
+                            }
+                            else {
+                                cout << "\nCondition \"" << condition << "\" Not Found.\n\n";
+                            }
+                            system("PAUSE");
+                        }
+                        break;
+                    case 3:
+                        flag2 = 1;
+                        break;
+                    default:
+                        cout << "\nPlease enter a valid menu option.\n\n";
+                        system("PAUSE");
+                    }
+                }
+                flag2 = 0;
+                break;
+            case 3:
+                flag = 1;
+                break;
+            default:
+                cout << "\nPlease Enter a Valid Menu Option\n\n";
+                system("PAUSE");
+            }
+        }
+    }
+
+    //writing donors information back into donors file
+    ofstream myFile;
+    myFile.open("donors.csv", ios::out);
+
+    for (auto element : donors) {
+        myFile << element.name << ',';
+        myFile << element.password << ',';
+        myFile << element.email << ',';
+        myFile << element.bloodType << ',';
+        myFile << element.streetAddress << ',';
+        myFile << element.suburb << ',';
+        myFile << element.city << ',';
+        myFile << element.ethnicity << ',';
+        myFile << element.gender << ',';
+        myFile << element.contactNumber << ',';
+        myFile << element.dobDay << ',';
+        myFile << element.dobMonth << ',';
+        myFile << element.dobYear << ',';
+        myFile << element.numOfConditions << endl;
+    }
+
+    myFile.close();
+
+    myFile.open("conditions.csv", ios::out);
+
+    for (auto element : donors) {
+        myFile << element.email << ',';
+        for (auto element : element.underlyingConditions) {
+            myFile << element << ',';
+        }
+        myFile << endl;
+    }
+
+    myFile.close();
+
+    return donors;
+}
+
+vector<Admin> admin_registration(vector<Admin> admins) {
+
+    return admins;
+}
+
+OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vector<Recipient> recip)
+{
+    OmniStruct o = { donors, recip, admins };
     bool flag = 0;
     int choice;
     while (flag == 0)
@@ -1513,7 +1732,7 @@ void admin_landing_screen()
         cout << "2. view Recipient report \n";
         cout << "3. Update donor blood testing report \n";
         cout << "4. Logout\n";
-         cout << "Enter Option Number:\t";
+        cout << "Enter Option Number:\t";
         cin >> choice;
 
         switch (choice) {
@@ -1527,7 +1746,8 @@ void admin_landing_screen()
             admin_recipient_report();
             break;
         case 3:
-            
+            cin.ignore();
+            donors = admin_update_donor(donors);
             break;
         case 4:
             flag = 1;
@@ -1540,11 +1760,73 @@ void admin_landing_screen()
             system("CLS");
         }
     }
-  
+    
+    o = { donors, recip, admins };
+    return o;
 }
 
 
+OmniStruct admin_login(vector<Admin> admins, vector<Donor> donors, vector<Recipient> recip) {
+    system("CLS");
 
+    //declaring necessary variables
+    string login, pword;
+    int position = 0, attempt = 3;
+    bool Eflag = 0, Pflag = 0;
+    OmniStruct o = { donors, recip, admins };
+
+    //Intro & taking input
+    cout << "\tLOGIN AS ADMIN\n";
+    cout << "******************************\n";
+    cout << "Enter Email (enter \"exit\" to return to menu):\t";
+    cin >> login;
+
+    //Validating email
+    for (auto element : admins) {
+        if (login == element.email) {
+            Eflag = 1;
+            pword = element.password;
+            cin.ignore();
+            while (attempt > 0) {
+                cout << "\nEnter Password:\t";
+                getline(cin, login);
+
+                if (login == pword) {
+                    o = admin_landing_screen(admins, donors, recip);
+                    break;
+                }
+                else {
+                    attempt--;
+                    cout << "Invalid Password. " << attempt << " Attempts Remaining.\n";
+                    if (attempt == 0) {
+                        Pflag = 1;
+                    }
+                }
+            }
+            break;
+        }
+        else {
+            position++;
+        }
+    }
+
+    if (Eflag == 0) {
+        if (login != "exit") { //will only repeat the function if user hasn't entered "exit". "exit" will allow the user to return to the main menu if they don't know a registered email.
+            cout << "\nEmail not found.\n\n";
+            system("PAUSE");
+            admin_login(admins, donors, recip);
+        }
+    }
+
+    if (Pflag == 1) {
+        cout << "\nNo more attempts remaining. Please try again later.\n";
+        system("PAUSE");
+    }
+
+    system("CLS");
+
+    return o;
+}
 
 
 
@@ -1690,6 +1972,10 @@ int main()
         stringstream booked(item);
         booked >> transactionB.booked;
 
+        //String Variable
+        getline(linestream, item, ',');
+        transactionB.bookedBy = item;
+
         //Add structure to array 'bookings'.
         bookings[linenum] = transactionB;
         linenum ++;
@@ -1734,6 +2020,7 @@ int main()
         getline(linestream, item, ',');
         transactionA.password = item;
 
+        admins.push_back(transactionA);
         linenum++;
     }
 
@@ -1748,6 +2035,7 @@ int main()
     //****************
     bool flag = 0;
     int choice;
+    OmniStruct o;
 
     while (flag == 0) {
         cout << "\n\t\t\t\t\tWELCOME TO CAPITAL BLOODBANK\n";
@@ -1784,7 +2072,10 @@ int main()
             recipients = recipient_login(recipients);
             break;
         case 7:
-            admin_landing_screen();
+            o = admin_login(admins, donors, recipients);
+            admins = o.a;
+            donors = o.d;
+            recipients = o.r;
             break;
         case 8:
             cout << "Thank you for using Capital Bloodbank!\n";
