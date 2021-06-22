@@ -1785,10 +1785,10 @@ OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vect
         cout << "1. view donor's report\n";
         cout << "2. view Recipient report \n";
         cout << "3. Update donor blood testing report \n";
-        cout << "4. Location report ";
-        cout << "5. Blood group report";
-        cout << "6. unnamed ";
-        cout << "7. unnamed ";
+        cout << "4. Location report\n";
+        cout << "5. Blood group report\n";
+        cout << "6. unnamed\n";
+        cout << "7. unnamed\n";
         cout << "8. Logout\n";
         cout << "Enter Option Number:\t";
         cin >> choice;
