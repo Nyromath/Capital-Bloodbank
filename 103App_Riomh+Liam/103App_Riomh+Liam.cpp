@@ -1711,6 +1711,11 @@ vector<Donor> admin_update_donor(vector<Donor> donors)
     return donors;
 }
 
+vector<Admin> admin_registration(vector<Admin> admins) {
+
+    return admins;
+}
+
 OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vector<Recipient> recip)
 {
     OmniStruct o = { donors, recip, admins };
@@ -1727,7 +1732,7 @@ OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vect
         cout << "2. view Recipient report \n";
         cout << "3. Update donor blood testing report \n";
         cout << "4. Logout\n";
-         cout << "Enter Option Number:\t";
+        cout << "Enter Option Number:\t";
         cin >> choice;
 
         switch (choice) {
