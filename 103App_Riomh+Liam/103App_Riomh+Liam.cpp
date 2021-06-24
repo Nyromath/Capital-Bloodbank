@@ -1761,11 +1761,54 @@ vector<Donor> admin_update_donor(vector<Donor> donors)
 }
 
 vector<Admin> admin_registration(vector<Admin> admins) {
+    Admin reg;
+    bool flag = 0;
+    string tempPW1, tempPW2;
+
+    //do while loop to ensure no duplicate emails
+    do {
+        cout << "Enter Email:\t\t";
+        cin.ignore();
+        getline(cin, reg.email);
+
+        for (auto element : admins) {
+            if (reg.email == element.email) {
+                cout << "This email is already registered. Please use a different email.\n";
+                flag = 1;
+                break;
+            }
+            else {
+                flag = 0;
+            }
+        }
+    } while (flag == 1);
+
+    //do while loop to confirm user's password
+    do {
+        cout << "Enter Password:\t\t";
+        getline(cin, tempPW1);
+        cout << "Confirm Password:\t";
+        getline(cin, tempPW2);
+
+        if (tempPW2 == tempPW1) {
+            reg.password = tempPW1;
+            flag = 0;
+        }
+        else {
+            cout << "Password does not match. Please enter password again.\n";
+            flag = 1;
+        }
+    } while (flag == 1);
+
+    //registering new admin to file
+    ofstream myFile;
+    myFile.open("admin.csv", ios::app);
+    
+    myFile << reg.email << ',' << reg.password << endl;
+    myFile.close();
 
 
-
-
-
+    admins.push_back(reg);
 
     return admins;
 }
@@ -1787,7 +1830,7 @@ OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vect
         cout << "3. Update donor blood testing report \n";
         cout << "4. Location report\n";
         cout << "5. Blood group report\n";
-        cout << "6. unnamed\n";
+        cout << "6. Register New Admin\n";
         cout << "7. unnamed\n";
         cout << "8. Logout\n";
         cout << "Enter Option Number:\t";
@@ -1817,8 +1860,7 @@ OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vect
             break;
 
         case 6:
-           
-         
+            admin_registration(admins);
             break;
         case 7:
 
