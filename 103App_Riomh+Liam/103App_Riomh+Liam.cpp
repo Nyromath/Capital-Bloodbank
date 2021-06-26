@@ -2023,11 +2023,11 @@ vector<Recipient> admin_delete_recipient(vector<Recipient> recip) {
 vector<Admin> admin_delete_admin(vector<Admin> admins, int p) {
     string inEmail;
     int position = 0;
-    bool flag = 0;
+    bool flag = 0, flag2 = 0;
     char choice;
 
     cin.ignore();
-    cout << "\nEnter Recipient Email:\t";
+    cout << "\nEnter Admin Email:\t";
     getline(cin, inEmail);
 
     for (auto element : admins) {
@@ -2035,6 +2035,7 @@ vector<Admin> admin_delete_admin(vector<Admin> admins, int p) {
             if (element.email == admins[p].email) {
                 cout << "\nYou cannot delete your own account!\n\n";
                 system("PAUSE");
+                flag2 = 1;
             }
             else {
                 system("CLS");
@@ -2048,11 +2049,11 @@ vector<Admin> admin_delete_admin(vector<Admin> admins, int p) {
         }
     }
 
-    if (flag == 0) {
+    if (flag == 0 && flag2 == 0) {
         cout << "\nAdmin with this email not found.\n\n";
         system("PAUSE");
     }
-    else {
+    else if (flag == 1){
         flag = 0;
         while (flag == 0) {
             cout << "\nDo you want to delete this admin account? (y/n)\t";
