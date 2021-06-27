@@ -1589,6 +1589,241 @@ void admin_donor_report() {
     system("CLS");
 }
 
+
+void admin_blood_report() {
+
+    vector<Donor> donors;
+    vector<Recipient> recipients;
+    ifstream myFile;
+    Donor transactionD;
+    Recipient transactionR;
+    string line;
+    int flag = 0;
+
+    //opening Donors
+    int linenum = 0;
+    myFile.open("donors.csv", ios::in);
+
+    //Loop to take donor input from file
+    while (getline(myFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        //String variables
+        getline(linestream, item, ',');
+        transactionD.name = item;
+        getline(linestream, item, ',');
+        transactionD.password = item;
+        getline(linestream, item, ',');
+        transactionD.email = item;
+        getline(linestream, item, ',');
+        transactionD.bloodType = item;
+        getline(linestream, item, ',');
+        transactionD.streetAddress = item;
+        getline(linestream, item, ',');
+        transactionD.suburb = item;
+        getline(linestream, item, ',');
+        transactionD.city = item;
+        getline(linestream, item, ',');
+        transactionD.ethnicity = item;
+        getline(linestream, item, ',');
+        transactionD.gender = item;
+
+
+
+        //Int Variables
+        getline(linestream, item, ',');
+        stringstream ss(item);
+        ss >> transactionD.contactNumber;
+
+        getline(linestream, item, ',');
+        stringstream day(item);
+        day >> transactionD.dobDay;
+
+        getline(linestream, item, ',');
+        stringstream month(item);
+        month >> transactionD.dobMonth;
+
+        getline(linestream, item, ',');
+        stringstream year(item);
+        year >> transactionD.dobYear;
+
+        //Add structure to vector 'donors'.
+        donors.push_back(transactionD);
+        linenum++;
+    }
+
+    myFile.close();
+
+
+    system("CLS");
+    string searchblood;
+    cin.ignore();
+    cout << "\nENTER BLOOD TYPE TO SEARCH FOR DONOR REPORTS" << endl;
+    cout << "******************************************************" << endl;
+    getline(cin, searchblood);
+
+
+
+    for (auto element : donors) {
+        if (element.bloodType == searchblood) {
+            cout << "-----------------------------------------------------" << endl;
+            cout << "\t\t" << element.name << endl;
+            cout << "-----------------------------------------------------" << endl;
+            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << element.city << endl;
+            cout << "\nEMAIL: " << element.email << endl;
+            cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
+            cout << "\nETHNICITY: " << element.ethnicity << endl;
+            cout << "\nGENDER: " << element.gender << endl;
+            cout << "\nDOB: " << element.dobDay << "/" << element.dobMonth << "/" << element.dobYear << endl;
+
+            system("PAUSE");
+        }
+    }
+
+    if (flag == 0) {
+        system("CLS");
+        cout << "THERE ARE NO DONORS WITH BLOOD TYPE: " << searchblood << endl;
+        system("PAUSE");
+    }
+
+
+
+    system("CLS");
+
+
+
+
+
+
+}
+
+
+
+
+
+
+void admin_location_report() {
+
+
+    vector<Donor> donors;
+    vector<Recipient> recipients;
+    ifstream myFile;
+    Donor transactionD;
+    Recipient transactionR;
+    string line;
+    int flag = 0;
+
+    //opening Donors
+    int linenum = 0;
+    myFile.open("donors.csv", ios::in);
+
+    //Loop to take donor input from file
+    while (getline(myFile, line)) {
+        istringstream linestream(line);
+        string item;
+
+        //String variables
+        getline(linestream, item, ',');
+        transactionD.name = item;
+        getline(linestream, item, ',');
+        transactionD.password = item;
+        getline(linestream, item, ',');
+        transactionD.email = item;
+        getline(linestream, item, ',');
+        transactionD.bloodType = item;
+        getline(linestream, item, ',');
+        transactionD.streetAddress = item;
+        getline(linestream, item, ',');
+        transactionD.suburb = item;
+        getline(linestream, item, ',');
+        transactionD.city = item;
+        getline(linestream, item, ',');
+        transactionD.ethnicity = item;
+        getline(linestream, item, ',');
+        transactionD.gender = item;
+
+
+
+        //Int Variables
+        getline(linestream, item, ',');
+        stringstream ss(item);
+        ss >> transactionD.contactNumber;
+
+        getline(linestream, item, ',');
+        stringstream day(item);
+        day >> transactionD.dobDay;
+
+        getline(linestream, item, ',');
+        stringstream month(item);
+        month >> transactionD.dobMonth;
+
+        getline(linestream, item, ',');
+        stringstream year(item);
+        year >> transactionD.dobYear;
+
+        //Add structure to vector 'donors'.
+        donors.push_back(transactionD);
+        linenum++;
+    }
+
+    myFile.close();
+
+
+    system("CLS");
+    string searchcity;
+    cin.ignore();
+    cout << "\nENTER CITY NAME TO SEARCH FOR DONOR REPORTS" << endl;
+    cout << "******************************************************" << endl;
+    getline(cin, searchcity);
+
+
+
+    for (auto element : donors) {
+        if (element.city == searchcity) {
+            cout << "-----------------------------------------------------" << endl;
+            cout << "\t\t" << element.name << endl;
+            cout << "-----------------------------------------------------" << endl;
+            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << element.city << endl;
+            cout << "\nEMAIL: " << element.email << endl;
+            cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
+            cout << "\nETHNICITY: " << element.ethnicity << endl;
+            cout << "\nGENDER: " << element.gender << endl;
+            cout << "\nDOB: " << element.dobDay << "/" << element.dobMonth << "/" << element.dobYear << endl;
+        
+
+            flag = 1;
+            system("PAUSE");
+
+
+        }
+    }
+
+    if (flag == 0) {
+
+        cout << "THERE ARE NO DONORS THAT LIVE IN: " << searchcity << endl;
+        system("PAUSE");
+
+    }
+
+
+
+    system("CLS");
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
 vector<Donor> admin_update_donor(vector<Donor> donors)
 {
     system("CLS");
@@ -1762,7 +1997,6 @@ vector<Donor> admin_update_donor(vector<Donor> donors)
 
 vector<Admin> admin_registration(vector<Admin> admins) {
 
-<<<<<<< HEAD
 
 
 
@@ -1772,14 +2006,14 @@ vector<Admin> admin_registration(vector<Admin> admins) {
 void admin_landing_screen()
 {
 
-=======
+
     return admins;
 }
 
 OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vector<Recipient> recip)
 {
     OmniStruct o = { donors, recip, admins };
->>>>>>> origin/dev
+
     bool flag = 0;
     int choice;
     while (flag == 0)
@@ -1792,15 +2026,13 @@ OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vect
         cout << "1. view donor's report\n";
         cout << "2. view Recipient report \n";
         cout << "3. Update donor blood testing report \n";
-<<<<<<< HEAD
-        cout << "4. Location report ";
-        cout << "5. Blood group report";
-        cout << "6. unnamed ";
-        cout << "7. unnamed ";
+        cout << "4. Location report \n";
+        cout << "5. Blood group report\n";
+        cout << "6. unnamed \n";
+        cout << "7. unnamed \n";
         cout << "8. Logout\n";
-=======
-        cout << "4. Logout\n";
->>>>>>> origin/dev
+     
+
         cout << "Enter Option Number:\t";
         cin >> choice;
 
@@ -1815,20 +2047,20 @@ OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vect
             admin_recipient_report();
             break;
         case 3:
-<<<<<<< HEAD
 
-=======
+
+
             cin.ignore();
             donors = admin_update_donor(donors);
->>>>>>> origin/dev
+
             break;
         case 4:
-            
+            admin_location_report();
 
             break;
 
         case 5:
-
+            admin_blood_report();
             break;
 
         case 6:
@@ -1854,10 +2086,10 @@ OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vect
             system("CLS");
         }
     }
-<<<<<<< HEAD
+
 
 }
-=======
+
     
     o = { donors, recip, admins };
     return o;
@@ -1922,7 +2154,7 @@ OmniStruct admin_login(vector<Admin> admins, vector<Donor> donors, vector<Recipi
     }
 
     system("CLS");
->>>>>>> origin/dev
+
 
     return o;
 }
