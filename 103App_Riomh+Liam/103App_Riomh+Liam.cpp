@@ -1996,21 +1996,406 @@ vector<Donor> admin_update_donor(vector<Donor> donors)
 }
 
 vector<Admin> admin_registration(vector<Admin> admins) {
+    Admin reg;
+    bool flag = 0;
+    string tempPW1, tempPW2;
+
+    system("CLS");
+    cout << "\n\tRegister New Admin Account\n";
+    cout << "******************************************\n\n";
+
+    //do while loop to ensure no duplicate emails
+    do {
+        cout << "Enter Email:\t\t";
+        cin.ignore();
+        getline(cin, reg.email);
+
+        for (auto element : admins) {
+            if (reg.email == element.email) {
+                cout << "This email is already registered. Please use a different email.\n";
+                flag = 1;
+                break;
+            }
+            else {
+                flag = 0;
+            }
+        }
+    } while (flag == 1);
+
+    //do while loop to confirm user's password
+    do {
+        cout << "Enter Password:\t\t";
+        getline(cin, tempPW1);
+        cout << "Confirm Password:\t";
+        getline(cin, tempPW2);
+
+        if (tempPW2 == tempPW1) {
+            reg.password = tempPW1;
+            flag = 0;
+        }
+        else {
+            cout << "Password does not match. Please enter password again.\n";
+            flag = 1;
+        }
+    } while (flag == 1);
+
+    //registering new admin to file
+    ofstream myFile;
+    myFile.open("admin.csv", ios::app);
+    
+    myFile << reg.email << ',' << reg.password << endl;
+    myFile.close();
 
 
+    admins.push_back(reg);
 
+    return admins;
+}
 
+vector<Donor> admin_delete_donor(vector<Donor> donors) {
+    string inEmail;
+    int position = 0;
+    bool flag = 0;
+    char choice;
 
+    cin.ignore();
+    cout << "\nEnter Donor Email:\t";
+    getline(cin, inEmail);
+    
+    for (auto element : donors) {
+        if (element.email == inEmail) {
+            system("CLS");
+            cout << "\n\t\t" << element.name << "\n\n";
+            cout << "\t" << element.email << endl;
+            cout << "\t" << element.contactNumber << endl;
+            cout << "\t" << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
+            cout << "\t" << element.dobDay << "/" << element.dobMonth << "/" << element.dobYear << endl;
+            flag = 1;
+        }
+        else {
+            position++;
+        }
+    }
+
+    if (flag == 0) {
+        cout << "\nDonor with this email not found.\n\n";
+        system("PAUSE");
+    }
+    else {
+        flag = 0;
+        while (flag == 0) {
+            cout << "\nDo you want to delete this user? (y/n)\t";
+            cin >> choice;
+
+            switch (tolower(choice)) {
+            case 'y':
+
+                while (flag == 0) {
+                    cout << "\nWARNING: This will PERMANENTLY delete this Donor's record. Are you sure? (y/n)\t";
+                    cin >> choice;
+
+                    switch (tolower(choice)) {
+                    case 'y':
+                        //deletes donor record at position email was found
+                        donors.erase(donors.begin() + position);
+                        cout << "\nRecord Deleted.\n\n";
+                        flag = 1;
+                        system("PAUSE");
+                        break;
+                    case 'n':
+                        cout << "\nReturning to menu.\n\n";
+                        flag = 1;
+                        system("PAUSE");
+                        break;
+                    default:
+                        cout << "\nPlease enter a valid menu option.\n";
+                    }
+                }
+
+                flag = 1;
+                break;
+            case 'n':
+                cout << "\nReturning to menu.\n\n";
+                flag = 1;
+                system("PAUSE");
+                break;
+            default:
+                cout << "\nPlease enter a valid menu option.\n";
+            }
+        }
+    }
+
+    //rewrite donor vector to file
+    ofstream myFile;
+    myFile.open("donors.csv", ios::out);
+
+    for (auto element : donors) {
+        myFile << element.name << ',';
+        myFile << element.password << ',';
+        myFile << element.email << ',';
+        myFile << element.bloodType << ',';
+        myFile << element.streetAddress << ',';
+        myFile << element.suburb << ',';
+        myFile << element.city << ',';
+        myFile << element.ethnicity << ',';
+        myFile << element.gender << ',';
+        myFile << element.contactNumber << ',';
+        myFile << element.dobDay << ',';
+        myFile << element.dobMonth << ',';
+        myFile << element.dobYear << ',';
+        myFile << element.numOfConditions << endl;
+    }
+
+    myFile.close();
+
+    myFile.open("conditions.csv", ios::out);
+
+    for (auto element : donors) {
+        myFile << element.email << ',';
+        for (auto element : element.underlyingConditions) {
+            myFile << element << ',';
+        }
+        myFile << endl;
+    }
+
+    myFile.close();
+
+    return donors;
+}
+
+vector<Recipient> admin_delete_recipient(vector<Recipient> recip) {
+    string inEmail;
+    int position = 0;
+    bool flag = 0;
+    char choice;
+
+    cin.ignore();
+    cout << "\nEnter Recipient Email:\t";
+    getline(cin, inEmail);
+
+    for (auto element : recip) {
+        if (element.email == inEmail) {
+            system("CLS");
+            cout << "\n\t\t" << element.name << "\n\n";
+            cout << "\t" << element.email << endl;
+            cout << "\t" << element.contactNumber << endl;
+            cout << "\t" << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
+            flag = 1;
+        }
+        else {
+            position++;
+        }
+    }
+
+    if (flag == 0) {
+        cout << "\nRecipient with this email not found.\n\n";
+        system("PAUSE");
+    }
+    else {
+        flag = 0;
+        while (flag == 0) {
+            cout << "\nDo you want to delete this user? (y/n)\t";
+            cin >> choice;
+
+            switch (tolower(choice)) {
+            case 'y':
+
+                while (flag == 0) {
+                    cout << "\nWARNING: This will PERMANENTLY delete this Recipient's record. Are you sure? (y/n)\t";
+                    cin >> choice;
+
+                    switch (tolower(choice)) {
+                    case 'y':
+                        //deletes donor record at position email was found
+                        recip.erase(recip.begin() + position);
+                        cout << "\nRecord Deleted.\n\n";
+                        flag = 1;
+                        system("PAUSE");
+                        break;
+                    case 'n':
+                        cout << "\nReturning to menu.\n\n";
+                        flag = 1;
+                        system("PAUSE");
+                        break;
+                    default:
+                        cout << "\nPlease enter a valid menu option.\n";
+                    }
+                }
+
+                flag = 1;
+                break;
+            case 'n':
+                cout << "\nReturning to menu.\n\n";
+                flag = 1;
+                system("PAUSE");
+                break;
+            default:
+                cout << "\nPlease enter a valid menu option.\n";
+            }
+        }
+    }
+
+    //writing recipients back into file
+    ofstream myFile;
+    myFile.open("recipients.csv", ios::out);
+
+    for (auto element : recip) {
+        myFile << element.name << ',';
+        myFile << element.password << ',';
+        myFile << element.streetAddress << ',';
+        myFile << element.suburb << ',';
+        myFile << element.city << ',';
+        myFile << element.email << ',';
+        myFile << element.contactNumber << ',';
+        myFile << element.registrationNumber << endl;
+    }
+
+    myFile.close();
+
+    return recip;
+}
+
+vector<Admin> admin_delete_admin(vector<Admin> admins, int p) {
+    string inEmail;
+    int position = 0;
+    bool flag = 0, flag2 = 0;
+    char choice;
+
+    cin.ignore();
+    cout << "\nEnter Admin Email:\t";
+    getline(cin, inEmail);
+
+    for (auto element : admins) {
+        if (element.email == inEmail) {
+            if (element.email == admins[p].email) {
+                cout << "\nYou cannot delete your own account!\n\n";
+                system("PAUSE");
+                flag2 = 1;
+            }
+            else {
+                system("CLS");
+                cout << "\t" << element.email << endl;
+                flag = 1;
+            }
+            break;
+        }
+        else {
+            position++;
+        }
+    }
+
+    if (flag == 0 && flag2 == 0) {
+        cout << "\nAdmin with this email not found.\n\n";
+        system("PAUSE");
+    }
+    else if (flag == 1){
+        flag = 0;
+        while (flag == 0) {
+            cout << "\nDo you want to delete this admin account? (y/n)\t";
+            cin >> choice;
+
+            switch (tolower(choice)) {
+            case 'y':
+
+                while (flag == 0) {
+                    cout << "\nWARNING: This will PERMANENTLY delete this Admin Account. Are you sure? (y/n)\t";
+                    cin >> choice;
+
+                    switch (tolower(choice)) {
+                    case 'y':
+                        //deletes donor record at position email was found
+                        admins.erase(admins.begin() + position);
+                        cout << "\nAccount Deleted.\n\n";
+                        flag = 1;
+                        system("PAUSE");
+                        break;
+                    case 'n':
+                        cout << "\nReturning to menu.\n\n";
+                        flag = 1;
+                        system("PAUSE");
+                        break;
+                    default:
+                        cout << "\nPlease enter a valid menu option.\n";
+                    }
+                }
+
+                flag = 1;
+                break;
+            case 'n':
+                cout << "\nReturning to menu.\n\n";
+                flag = 1;
+                system("PAUSE");
+                break;
+            default:
+                cout << "\nPlease enter a valid menu option.\n";
+            }
+        }
+    }
+
+    //writing admins back into file
+    ofstream myFile;
+    myFile.open("admin.csv", ios::out);
+
+    for (auto element : admins) {
+        myFile << element.email << ',';
+        myFile << element.password << endl;
+    }
+
+    myFile.close();
 
 }
 
-OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vector<Recipient> recip)
+OmniStruct admin_delete_user(vector<Admin> admins, vector<Donor> donors, vector<Recipient> recip, int p)
+{
+    bool flag = 0;
+    int choice;
+    while (flag == 0) {
+        system("CLS");
+        cout << "\n\tDelete a User\n";
+        cout << "*****************************\n\n";
+        cout << "1. Delete Donor\n";
+        cout << "2. Delete Recipient\n";
+        cout << "3. Delete Admin\n";
+        cout << "4. Exit\n\n";
+
+        cout << "Enter Option Number:\t";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            donors = admin_delete_donor(donors);
+            break;
+        case 2:
+            recip = admin_delete_recipient(recip);
+            break;
+        case 3:
+            if (admins.size() == 1) {
+                cout << "\nThis is the only Admin Account. You cannot delete it.\n\n";
+                system("PAUSE");
+            }
+            else {
+                admins = admin_delete_admin(admins, p);
+            }
+            break;
+        case 4:
+            flag = 1;
+            break;
+        default:
+            cout << "Please enter a valid menu option.\n";
+            system("PAUSE");
+        }
+    }
+
+    OmniStruct o = { donors, recip, admins };
+    return o;
+}
+
+OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vector<Recipient> recip, int p)
 {
     OmniStruct o = { donors, recip, admins };
     bool flag = 0;
     int choice;
     while (flag == 0)
-
     {
         system("CLS");
         cout << "\n\t\t\t\t\tWELCOME ADMIN \n";
@@ -2019,10 +2404,10 @@ OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vect
         cout << "1. view donor's report\n";
         cout << "2. view Recipient report \n";
         cout << "3. Update donor blood testing report \n";
-        cout << "4. Location report ";
-        cout << "5. Blood group report";
-        cout << "6. unnamed ";
-        cout << "7. unnamed ";
+        cout << "4. Location report\n";
+        cout << "5. Blood group report\n";
+        cout << "6. Register New Admin\n";
+        cout << "7. Delete a User\n";
         cout << "8. Logout\n";
         cout << "Enter Option Number:\t";
         cin >> choice;
@@ -2051,15 +2436,14 @@ OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vect
             break;
 
         case 6:
-           
-         
+            admins = admin_registration(admins);
             break;
         case 7:
-
-
+            o = admin_delete_user(admins, donors, recip, p);
+            admins = o.a;
+            donors = o.d;
+            recip = o.r;
             break;
-
-
         case 8:
             flag = 1;
             system("CLS");
@@ -2070,7 +2454,6 @@ OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vect
         default:
             cout << "Please enter a valid menu option.\n";
             system("PAUSE");
-            system("CLS");
         }
     }   
     o = { donors, recip, admins };
@@ -2104,7 +2487,7 @@ OmniStruct admin_login(vector<Admin> admins, vector<Donor> donors, vector<Recipi
                 getline(cin, login);
 
                 if (login == pword) {
-                    o = admin_landing_screen(admins, donors, recip);
+                    o = admin_landing_screen(admins, donors, recip, position);
                     break;
                 }
                 else {
