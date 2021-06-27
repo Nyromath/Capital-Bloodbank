@@ -206,7 +206,7 @@ void donors_contact_info() { //allows for search and display of Donor's contact 
             cout << "-----------------------------------------------------" << endl;
             cout << "\t\t" << element.name << endl;
             cout << "-----------------------------------------------------" << endl;
-            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
+            cout << "\nADDRESS: " << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
             cout << "\nEMAIL: " << element.email << endl;
             cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
             cout << "\nBLOOD TYPE: " << element.bloodType << endl;
@@ -305,7 +305,7 @@ void donors_by_blood() { //searches for donor by given Blood Type
             cout << "\t\t" << element.name << endl;
             cout << "-----------------------------------------------------" << endl;
 
-            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
+            cout << "\nADDRESS: " << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
             cout << "\nEMAIL: " << element.email << endl;
             cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
             cout << "\nBLOOD TYPE: " << element.bloodType << endl;
@@ -411,7 +411,7 @@ void donors_by_location() { //searches for donor by given City
             cout << "\n-----------------------------------------------------" << endl;
             cout << "\t\t" << element.name << endl;
             cout << "-----------------------------------------------------" << endl;
-            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
+            cout << "\nADDRESS: " << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
             cout << "\nEMAIL: " << element.email << endl;
             cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
             cout << "\nBLOOD TYPE: " << element.bloodType << endl;
@@ -446,6 +446,10 @@ vector<Recipient> recipient_manage_info(vector<Recipient> recip, int p) { //allo
     //display current info and menu
     while (flag == 0) {
         system("CLS");
+        cout << "\nIMPORTANT: Do NOT include any COMMAS ( , ) in your registration information.\n";
+        cout << "Due to the programming of this database system, it will break your entry.\n";
+        cout << "If this happens, contact an Admin to fix your info.\n";
+
         cout << "\nYour Current Info:\n\n";
         cout << "1.\tName:\t\t" << recip[p].name << endl;
         cout << "2.\tEmail:\t\t" << recip[p].email << endl;
@@ -473,7 +477,7 @@ vector<Recipient> recipient_manage_info(vector<Recipient> recip, int p) { //allo
             break;
         case 4:
             cin.ignore();
-            recip[p].streetAddress = update_detail_string("Street Address");
+            recip[p].streetAddress = update_detail_string("Street Address (e.g. 1 Main Street)");
             recip[p].suburb = update_detail_string("Suburb");
             recip[p].city = update_detail_string("City");
             break;
@@ -602,6 +606,10 @@ vector<Donor> donor_manage_info(vector<Donor> donors, int p) { //allows donor to
     while (flag == 0) {
 
         system("CLS");
+        cout << "\nIMPORTANT: Do NOT include any COMMAS ( , ) in your registration information.\n";
+        cout << "Due to the programming of this database system, it will break your entry.\n";
+        cout << "If this happens, contact an Admin to fix your info.\n";
+
         cout << "\nYour Current Info:\n\n";
         cout << "1.\tName:\t\t" << donors[p].name << endl;
         cout << "2.\tEmail:\t\t" << donors[p].email << endl;
@@ -633,7 +641,7 @@ vector<Donor> donor_manage_info(vector<Donor> donors, int p) { //allows donor to
             break;
         case 4:
             cin.ignore();
-            donors[p].streetAddress = update_detail_string("Street Address");
+            donors[p].streetAddress = update_detail_string("Street Address (e.g. 1 Main Street)");
             donors[p].suburb = update_detail_string("Suburb");
             donors[p].city = update_detail_string("City");
             break;
@@ -994,9 +1002,20 @@ vector<Donor> donor_registration(vector<Donor> donors) { //allows user to regist
     bool flag = 0;
     char conditionCheck;
 
-    //taking user input for donor
+    //intro message
     cout << "\tREGISTER AS DONOR\n";
-    cout << "*********************************\n";
+    cout << "*********************************\n\n";
+    cout << "IMPORTANT: Do NOT include any COMMAS ( , ) in your registration information.\n";
+    cout << "Due to the programming of this database system, it will break your entry.\n";
+    cout << "If this happens, contact an Admin to fix your info.\n\n";
+    
+    system("PAUSE");
+    system("CLS");
+
+    cout << "\tREGISTER AS DONOR\n";
+    cout << "*********************************\n\n";
+
+    //taking user input for donor
     cin.ignore();
     cout << "Enter Full Name (enter \"exit\" to return to menu):\t";
     getline(cin, reg.name);
@@ -1043,7 +1062,7 @@ vector<Donor> donor_registration(vector<Donor> donors) { //allows user to regist
 
     cout << "Enter Contact Number:\t";
     getline(cin, reg.contactNumber);
-    cout << "Enter Street Address:\t";
+    cout << "Enter Street Address (e.g. 1 Main Street):\t";
     getline(cin, reg.streetAddress);
     cout << "Enter Suburb:\t\t";
     getline(cin, reg.suburb);
@@ -1233,9 +1252,21 @@ vector<Recipient>* recipient_registration(vector<Recipient>* recip) {
     string tempPW1, tempPW2, tempGender;
     bool flag = 0;
 
-    //taking user input for recipient
+    //intro message
+    cout << "\tREGISTER AS RECIPIENT\n";
+    cout << "*************************************\n\n";
+
+    cout << "IMPORTANT: Do NOT include any COMMAS ( , ) in your registration information.\n";
+    cout << "Due to the programming of this database system, it will break your entry.\n";
+    cout << "If this happens, contact an Admin to fix your info.\n\n";
+
+    system("PAUSE");
+    system("CLS");
+
     cout << "\tREGISTER AS RECIPIENT\n";
     cout << "*************************************\n";
+
+    //taking user input for recipient
     cin.ignore();
     cout << "Enter Full Name:\t";
     getline(cin, reg.name);
@@ -1261,7 +1292,7 @@ vector<Recipient>* recipient_registration(vector<Recipient>* recip) {
 
     cout << "Enter Contact Number:\t";
     getline(cin, reg.contactNumber);
-    cout << "Enter Street Address:\t";
+    cout << "Enter Street Address (e.g. 1 Main Street):\t";
     getline(cin, reg.streetAddress);
     cout << "Enter Suburb:\t\t";
     getline(cin, reg.suburb);
@@ -1352,7 +1383,7 @@ void admin_recipient_report() { //allows administrator to search for recipient i
             cout << "-----------------------------------------------------" << endl;
             cout << "\t\t" << element.name << endl;
             cout << "-----------------------------------------------------" << endl;
-            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
+            cout << "\nADDRESS: " << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
             cout << "\nEMAIL: " << element.email << endl;
             cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
             cout << "\nREGISTRATION NUMBER: " << element.registrationNumber << "\n\n";
@@ -1478,7 +1509,7 @@ void admin_donor_report() { //allows administrator to search for donor info by n
             cout << "\t\t" << element.name << endl;
             cout << "-----------------------------------------------------" << endl;
             cout << "\nBLOOD TYPE: " << element.bloodType << endl;
-            cout << "\nSTREET ADDRESS: " << element.streetAddress << endl;
+            cout << "\nADDRESS: " << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
             cout << "\nEMAIL: " << element.email << endl;
             cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
             cout << "\nDATE OF BIRTH: " << element.dobDay << "/" << element.dobMonth << "/" << element.dobYear << endl;
@@ -1591,7 +1622,7 @@ void admin_blood_report() { //allows adminstrator to search for donors based on 
             cout << "-----------------------------------------------------" << endl;
             cout << "\t\t" << element.name << endl;
             cout << "-----------------------------------------------------" << endl;
-            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << element.city << endl;
+            cout << "\nADDRESS: " << element.streetAddress << ", " << element.suburb << element.city << endl;
             cout << "\nEMAIL: " << element.email << endl;
             cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
             cout << "\nETHNICITY: " << element.ethnicity << endl;
@@ -1688,7 +1719,7 @@ void admin_location_report() { //allows administrator to search for donors based
             cout << "\n-----------------------------------------------------" << endl;
             cout << "\t\t" << element.name << endl;
             cout << "-----------------------------------------------------" << endl;
-            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
+            cout << "\nADDRESS: " << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
             cout << "\nEMAIL: " << element.email << endl;
             cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
             cout << "\nETHNICITY: " << element.ethnicity << endl;
@@ -1893,6 +1924,15 @@ vector<Admin> admin_registration(vector<Admin> admins) { //allows adminstrator t
     string tempPW1, tempPW2;
 
     system("CLS");
+    cout << "\n\tRegister New Admin Account\n";
+    cout << "******************************************\n\n";
+
+    cout << "IMPORTANT: Do NOT include any COMMAS ( , ) in your registration information.\n";
+    cout << "Due to the programming of this database system, it will break your entry.\n\n";
+
+    system("PAUSE");
+    system("CLS");
+
     cout << "\n\tRegister New Admin Account\n";
     cout << "******************************************\n\n";
 
