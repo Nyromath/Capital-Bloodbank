@@ -6,12 +6,12 @@
 #include <string>
 #include <stdlib.h>
 #include <vector>
-#include <tuple>
 using namespace std;
 
+//defining structures for Donor, Recipient, Admin & Booking
 struct Donor {
-    string name, password, email, bloodType, streetAddress, suburb, city, ethnicity, gender;
-    int contactNumber, dobDay, dobMonth, dobYear, numOfConditions;
+    string name, password, email, bloodType, streetAddress, suburb, city, ethnicity, gender, contactNumber;
+    int dobDay, dobMonth, dobYear, numOfConditions;
     vector<string> underlyingConditions;
 
     Donor(string s = " ", int i = 0) {
@@ -24,16 +24,16 @@ struct Donor {
         city = s;
         ethnicity = s;
         gender = s;
-        contactNumber = i;
+        contactNumber = s;
         dobDay = i;
         dobMonth = i;
         dobYear = i;
+        numOfConditions = i;
     }
 };
 
 struct Recipient {
-    string name, password, streetAddress, suburb, city, email;
-    int contactNumber, registrationNumber;
+    string name, password, streetAddress, suburb, city, email, contactNumber, registrationNumber;
 
     Recipient(string s = " ", int i = 0) {
         name = s;
@@ -42,8 +42,8 @@ struct Recipient {
         suburb = s;
         city = s;
         email = s;
-        contactNumber = i;
-        registrationNumber = i;
+        contactNumber = s;
+        registrationNumber = s;
     }
 };
 
@@ -68,37 +68,38 @@ struct Booking {
     }
 };
 
+//structure with vectors for all 3 user types to return through admin functions
 struct OmniStruct {
     vector<Donor> d;
     vector<Recipient> r;
     vector<Admin> a;
 };
 
-//INFO FUNCTION
-//****************
 
-void intro_function() {
+void intro_function() { //Displays About Us info
     system("CLS");
     cout << "\n\t\t\t\t\tABOUT US\n";
     cout << "********************************************************************************************\n\n";
-    cout << "\tCapital Blood Bank is a New Zealand based bloodbank with locations across the north and south island.\n";
-    cout << "\tas a blood bank we have been running for over 25 years obtaining over 100,000 liters of blood\n";
-    cout << "\tthe blood is sent to all local centers to use for those who require it\n";
-    cout << "\tWe ask that those who are able to donate blood to donate it as many people in New Zealand need blood\n";
-    cout << "\tIf you are interested in donating blood or are in need of blood please register and contact us for more info\n";
-    cout << "\tIf you are unsure if you are eligable to donate blood please call us or email us to book a time at one of\n";
-    cout << "\tour locations for an interview.\n";
-    cout << "\tAll of our contact information can be found on the contact info tab found in the main menu.\n";
+    cout << "\tCapital Blood Bank is a New Zealand based Blood Bank with locations across the north\n";
+    cout << "\tand south island.\n\n";
+    cout << "\tAs a blood bank we have been running for over 25 years, and have obtained over\n";
+    cout << "\t100,000 litres of blood\n\n";
+    cout << "\tThe blood is sent to all local centers to use for those who require it\n";
+    cout << "\tWe ask that those who are able to donate blood to donate it as many people in New\n";
+    cout << "\tZealand need blood\n\n";
+    cout << "\tIf you are interested in donating blood or are in need of blood please register and\n";
+    cout << "\tcontact us for more info\n\n";
+    cout << "\tIf you are unsure if you are eligible to donate blood please call us or email us to\n";
+    cout << "\tbook a time at one of our locations for an interview.\n\n";
+    cout << "\tAll of our contact information can be found on the contact info tab found in the\n";
+    cout << "\tmain menu.\n\n";
     cout << "********************************************************************************************\n\n";
     system("PAUSE");
     system("CLS");
 }
-//****************
 
-//CONTACT FUNCTION
-//****************
 void display_contact_info()
-{
+{   //displays contact info
     system("CLS");
     cout << "\n\t\t\t\t\tCONTACT INFO\n";
     cout << "********************************************************************************************\n\n";
@@ -129,13 +130,11 @@ int update_detail_int(string attribute) { //small function to update int variabl
     return i;
 }
 
-//****************
-void donors_contact_info() {
+void donors_contact_info() { //allows for search and display of Donor's contact info through Recipient menu
+    //declaring variables
     vector<Donor> donors;
-    vector<Recipient> recipients;
     ifstream myFile;
     Donor transactionD;
-    Recipient transactionR;
     string line;
     int flag = 0;
 
@@ -167,14 +166,11 @@ void donors_contact_info() {
         transactionD.ethnicity = item;
         getline(linestream, item, ',');
         transactionD.gender = item;
-
+        getline(linestream, item, ',');
+        transactionD.contactNumber = item;
 
 
         //Int Variables
-        getline(linestream, item, ',');
-        stringstream ss(item);
-        ss >> transactionD.contactNumber;
-
         getline(linestream, item, ',');
         stringstream day(item);
         day >> transactionD.dobDay;
@@ -194,7 +190,7 @@ void donors_contact_info() {
 
     myFile.close();
 
-
+    //taking user input
     system("CLS");
     string searchname;
     cin.ignore();
@@ -203,7 +199,7 @@ void donors_contact_info() {
     getline(cin, searchname);
 
 
-
+    //searching and displaying donor info
     for (auto element : donors) {
         if (element.name == searchname) {
             system("CLS");
@@ -214,18 +210,17 @@ void donors_contact_info() {
             cout << "\nEMAIL: " << element.email << endl;
             cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
             cout << "\nBLOOD TYPE: " << element.bloodType << endl;
+            cout << "-----------------------------------------------------" << "\n\n";
             flag = 1;
             system("PAUSE");
         }
 
     }
 
+    //shows appropriate message if no donor is found with given name
     if (flag == 0) {
-        system("CLS");
-        cout << "THERE ARE NO DONORS FOUND WITH THAT NAME" << endl;
+        cout << "\nTHERE ARE NO DONORS FOUND WITH THAT NAME" << "\n\n";
         system("PAUSE");
-
-
     }
 
     system("CLS");
@@ -234,13 +229,11 @@ void donors_contact_info() {
 
 
 
-void donors_by_blood() {
-
+void donors_by_blood() { //searches for donor by given Blood Type
+    //declaring variables
     vector<Donor> donors;
-    vector<Recipient> recipients;
     ifstream myFile;
     Donor transactionD;
-    Recipient transactionR;
     string line;
     int flag = 0;
 
@@ -272,14 +265,11 @@ void donors_by_blood() {
         transactionD.ethnicity = item;
         getline(linestream, item, ',');
         transactionD.gender = item;
-
+        getline(linestream, item, ',');
+        transactionD.contactNumber = item;
 
 
         //Int Variables
-        getline(linestream, item, ',');
-        stringstream ss(item);
-        ss >> transactionD.contactNumber;
-
         getline(linestream, item, ',');
         stringstream day(item);
         day >> transactionD.dobDay;
@@ -299,7 +289,7 @@ void donors_by_blood() {
 
     myFile.close();
 
-
+    //taking user input
     system("CLS");
     string searchblood;
     cin.ignore();
@@ -308,10 +298,10 @@ void donors_by_blood() {
     getline(cin, searchblood);
 
 
-
+    //searches and displays donor info
     for (auto element : donors) {
         if (element.bloodType == searchblood) {
-            cout << "-----------------------------------------------------" << endl;
+            cout << "\n-----------------------------------------------------" << endl;
             cout << "\t\t" << element.name << endl;
             cout << "-----------------------------------------------------" << endl;
 
@@ -319,14 +309,15 @@ void donors_by_blood() {
             cout << "\nEMAIL: " << element.email << endl;
             cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
             cout << "\nBLOOD TYPE: " << element.bloodType << endl;
+            cout << "-----------------------------------------------------" << "\n\n";
             flag = 1;
             system("PAUSE");
         }
     }
 
+    //displays appropriate message if no donors with given blood type exist
     if (flag == 0) {
-        system("CLS");
-        cout << "THERE ARE NO DONORS WITH BLOOD TYPE: " << searchblood << endl;
+        cout << "\nTHERE ARE NO DONORS WITH BLOOD TYPE: " << searchblood << "\n\n";
         system("PAUSE");
     }
 
@@ -346,14 +337,10 @@ void donors_by_blood() {
 
 
 
-void donors_by_location() {
-
-
+void donors_by_location() { //searches for donor by given City
     vector<Donor> donors;
-    vector<Recipient> recipients;
     ifstream myFile;
     Donor transactionD;
-    Recipient transactionR;
     string line;
     int flag = 0;
 
@@ -385,14 +372,11 @@ void donors_by_location() {
         transactionD.ethnicity = item;
         getline(linestream, item, ',');
         transactionD.gender = item;
-
+        getline(linestream, item, ',');
+        transactionD.contactNumber = item;
 
 
         //Int Variables
-        getline(linestream, item, ',');
-        stringstream ss(item);
-        ss >> transactionD.contactNumber;
-
         getline(linestream, item, ',');
         stringstream day(item);
         day >> transactionD.dobDay;
@@ -412,7 +396,7 @@ void donors_by_location() {
 
     myFile.close();
 
-
+    //taking user input
     system("CLS");
     string searchcity;
     cin.ignore();
@@ -421,16 +405,17 @@ void donors_by_location() {
     getline(cin, searchcity);
 
 
-
+    //searches and displays donor info
     for (auto element : donors) {
         if (element.city == searchcity) {
-            cout << "-----------------------------------------------------" << endl;
+            cout << "\n-----------------------------------------------------" << endl;
             cout << "\t\t" << element.name << endl;
             cout << "-----------------------------------------------------" << endl;
-            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << element.city << endl;
+            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
             cout << "\nEMAIL: " << element.email << endl;
             cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
             cout << "\nBLOOD TYPE: " << element.bloodType << endl;
+            cout << "-----------------------------------------------------" << "\n\n";
             flag = 1;
             system("PAUSE");
 
@@ -438,9 +423,10 @@ void donors_by_location() {
         }
     }
 
+    //displays appropriate message if no donors in given city exist
     if (flag == 0) {
 
-        cout << "THERE ARE NO DONORS THAT LIVE IN: " << searchcity << endl;
+        cout << "\nTHERE ARE NO DONORS THAT LIVE IN: " << searchcity << "\n\n";
         system("PAUSE");
 
     }
@@ -452,23 +438,8 @@ void donors_by_location() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-vector<Recipient> recipient_manage_info(vector<Recipient> recip, int p) {
+vector<Recipient> recipient_manage_info(vector<Recipient> recip, int p) { //allows recipient to view and update their information
+    //declaring variables
     int n = 0, choice;
     bool flag = 0;
 
@@ -507,7 +478,7 @@ vector<Recipient> recipient_manage_info(vector<Recipient> recip, int p) {
             recip[p].city = update_detail_string("City");
             break;
         case 5:
-            recip[p].contactNumber = update_detail_int("Contact Number");
+            recip[p].contactNumber = update_detail_string("Contact Number");
             break;
         case 6:
             flag = 1;
@@ -538,33 +509,32 @@ vector<Recipient> recipient_manage_info(vector<Recipient> recip, int p) {
     return recip;
 }
 
-vector<Recipient> recipient_landing_screen(vector<Recipient> recip, int p) {
+vector<Recipient> recipient_landing_screen(vector<Recipient> recip, int p) { //main menu for user logged in as a Recipient
+    //declaring variables
     int choice;
     bool flag = 0;
 
+    //menu
     while (flag == 0) {
         system("CLS");
-        cout << "\n\t\t\t\t\tWELCOME RECIPIENT\n";
+        cout << "\n\t\t\t\t\tWelcome, " << recip[p].name << "\n";
         cout << "************************************************************************************************************\n\n";
-
-        cout << "1. Find potential donors by blood type \n";
-        cout << "2. Find potential donors by city\n";
-        cout << "3. Find donor contact info\n";
+        cout << "You are logged in as a RECIPIENT\n\n";
+        cout << "1. Find Potential Donors by Blood Type \n";
+        cout << "2. Find Potential Donors by City\n";
+        cout << "3. Find Donor Contact Info\n";
         cout << "4. Manage my Information\n";
-        cout << "5. log out\n";
-        cout << "Enter option Number:\n";
+        cout << "5. Log Out\n\n";
+        cout << "Enter Option Number:\t";
         cin >> choice;
 
         switch (choice) {
         case 1:
-
             donors_by_blood();
-
             break;
         case 2:
             donors_by_location();
             break;
-
         case 3:
             donors_contact_info();
             break;
@@ -576,7 +546,7 @@ vector<Recipient> recipient_landing_screen(vector<Recipient> recip, int p) {
             system("CLS");
             break;
         default:
-            cout << "Please enter a valid menu option.\n";
+            cout << "\nPlease enter a valid menu option.\n";
             system("PAUSE");
             system("CLS");
         }
@@ -586,53 +556,44 @@ vector<Recipient> recipient_landing_screen(vector<Recipient> recip, int p) {
     return recip;
 }
 
-void donor_benefits() {
-
-
-
+void donor_benefits() { //displays benefits of donating blood information to donor
     system("CLS");
     cout << "\n\t\t\t\t\tBENEFITS OF DONATING BLOOD \n";
     cout << "********************************************************************************************\n\n";
-    cout << "\tThere are many benefits to donating blood here are a few:\n";
-    cout << "\t One blood donation can save up to 3 lives.\n";
-    cout << "\tBlood donation not only makes the receivers life good but also helps the donor to maintain good health.\n";
-    cout << "\tHealth benefits of blood donation include reduced risk of hemochromatosis. \n";
-    cout << "\tBlood donation helps in lowering the risk of cancer. By donating blood the iron stores in the body are\n";
-    cout << "\tmaintained at healthy levels.\n";
-    cout << "\tA reduction in the iron level in the body is linked with low cancer risk. \n";
-
-
+    cout << "\tThere are many benefits to donating blood. Here are a few:\n\n";
+    cout << "\t* One blood donation can save up to 3 lives!\n\n";
+    cout << "\t* Blood donation not only saves lives, but also helps the donor to maintain good\n";
+    cout << "\t  health.\n\n";
+    cout << "\t* Health benefits of blood donation include reduced risk of hemochromatosis.\n\n";
+    cout << "\t* Blood donation helps in lowering the risk of cancer. By donating blood the iron\n";
+    cout << "\t  stores in the body are maintained at healthy levels.\n\n";
+    cout << "\t* A reduction in the iron level in the body is linked with low cancer risk.\n\n";
     cout << "********************************************************************************************\n\n";
     system("PAUSE");
     system("CLS");
-
-
 }
 
-void donor_how_i_donate() {
-
-
+void donor_how_i_donate() { //displays instructions on how to donate to donor
     system("CLS");
     cout << "\n\t\t\t\t\tHOW DO I DONATE BLOOD? \n";
     cout << "********************************************************************************************\n\n";
-    cout << "\tThere are many ways you can donate blood.\n";
-    cout << "\tThe easiest way to donate is by booking a donation by selecting the book a donation tab\n";
-    cout << "\ton the donator menu.\n";
-    cout << "\tOtherwise you can find our conatct info menu on the home page by logging out\n";
-    cout << "\tTo book a time to donate your blood.\n";
-    cout << "\tTo be eligable to donate blood you will be required to awnser some breief yes/no questions to ensure that\n";
-    cout << "\tThose receiving your blood will be safe from any diseases and viruses\n";
+    cout << "\tThere are many ways you can donate blood.\n\n";
+    cout << "\tThe easiest way to donate is by booking a donation by selecting the book a donation\n";
+    cout << "\ttab on the donor menu.\n\n";
+    cout << "\tOtherwise you can find our contact info menu on the home page by logging out to book\n";
+    cout << "\ta time to donate blood.\n\n";
+    cout << "\tTo be eligible to donate blood you will be required to answer some brief yes/no\n";
+    cout << "\tquestions to ensure that those receiving your blood will be safe from any diseases\n";
+    cout << "\tand viruses\n\n";
     cout << "********************************************************************************************\n\n";
     system("PAUSE");
     system("CLS");
-
-
-
 }
 
 
 
-vector<Donor> donor_manage_info(vector<Donor> donors, int p) {
+vector<Donor> donor_manage_info(vector<Donor> donors, int p) { //allows donor to view and edit their information
+    //declaring variables
     int n = 0, choice;
     bool flag = 0, flag2 = 0, foundCondition = 0;
     string condition;
@@ -678,7 +639,7 @@ vector<Donor> donor_manage_info(vector<Donor> donors, int p) {
             break;
         case 5:
             cin.ignore();
-            donors[p].contactNumber = update_detail_int("Contact Number");
+            donors[p].contactNumber = update_detail_string("Contact Number");
             break;
         case 6:
             cin.ignore();
@@ -811,7 +772,7 @@ vector<Donor> donor_manage_info(vector<Donor> donors, int p) {
     return donors;
 }
 
-Booking* book_donation(Booking* b, string email) {
+Booking* book_donation(Booking* b, string email) { //allows donor to book a donation to donate blood
     //declaring necessary variables
     int day, hour, i;
     char choice;
@@ -916,32 +877,33 @@ Booking* book_donation(Booking* b, string email) {
     return b;
 }
 
-vector<Donor> donor_landing_screen(vector<Donor> donors, int p, Booking* b) {
+vector<Donor> donor_landing_screen(vector<Donor> donors, int p, Booking* b) { //main menu for user logged in as donor
+    //declaring variables
     int choice;
     bool flag = 0;
 
+    //menu
     while (flag == 0) {
         system("CLS");
-        cout << "\n\t\t\t\t\tWELCOME DONATOR  \n";
+        cout << "\n\t\t\t\t\tWelcome, " << donors[p].name <<"\n";
         cout << "************************************************************************************************************\n\n";
+        cout << "You are logged in as a DONOR\n\n";
 
         cout << "1. How do I donate blood?\n";
         cout << "2. What are the benefits of donating blood?\n";
         cout << "3. Manage my Information\n";
-        cout << "4. Book a donation\n";
-        cout << "5. log out\n";
-        cout << "Enter option Number:\n";
+        cout << "4. Book a Donation\n";
+        cout << "5. Log Out\n\n";
+        cout << "Enter option Number:\t";
         cin >> choice;
 
         switch (choice) {
         case 1:
             donor_how_i_donate();
-
             break;
         case 2:
             donor_benefits();
             break;
-
         case 3:
             donors = donor_manage_info(donors, p);
             break;
@@ -953,7 +915,7 @@ vector<Donor> donor_landing_screen(vector<Donor> donors, int p, Booking* b) {
             system("CLS");
             break;
         default:
-            cout << "Please enter a valid menu option.\n";
+            cout << "\nPlease enter a valid menu option.\n";
             system("PAUSE");
             system("CLS");
         }
@@ -963,7 +925,7 @@ vector<Donor> donor_landing_screen(vector<Donor> donors, int p, Booking* b) {
     return donors;
 }
 
-vector<Donor> donor_login(vector<Donor> donors, Booking* b) {
+vector<Donor> donor_login(vector<Donor> donors, Booking* b) { //log in screen for donor users
     system("CLS");
 
     //declaring necessary variables
@@ -1017,21 +979,15 @@ vector<Donor> donor_login(vector<Donor> donors, Booking* b) {
         cout << "\nNo more attempts remaining. Please try again later.\n";
         system("PAUSE");
     }
-    /*else { //Entering and validating password
-        cout << "\nEnter Password:\t";
-        cin.ignore();
-        getline(cin, login);
-        if (login == *donors[position].password) {
-        }
-    }*/
 
     system("CLS");
 
     return donors;
 }
 
-vector<Donor> donor_registration(vector<Donor> donors) {
+vector<Donor> donor_registration(vector<Donor> donors) { //allows user to register a donor account
     system("CLS");
+
     //declaring donor struct to store details, and temp values for validating
     struct Donor reg;
     string tempPW1, tempPW2, tempGender, condition;
@@ -1042,8 +998,15 @@ vector<Donor> donor_registration(vector<Donor> donors) {
     cout << "\tREGISTER AS DONOR\n";
     cout << "*********************************\n";
     cin.ignore();
-    cout << "Enter Full Name:\t";
+    cout << "Enter Full Name (enter \"exit\" to return to menu):\t";
     getline(cin, reg.name);
+
+    //exit clause
+    if (reg.name == "exit") {
+        system("CLS");
+        return donors;
+    }
+
     //do while loop to ensure no duplicate emails
     do {
         cout << "Enter Email:\t\t";
@@ -1079,15 +1042,14 @@ vector<Donor> donor_registration(vector<Donor> donors) {
     } while (flag == 1);
 
     cout << "Enter Contact Number:\t";
-    cin >> reg.contactNumber;
-    cin.ignore();
+    getline(cin, reg.contactNumber);
     cout << "Enter Street Address:\t";
     getline(cin, reg.streetAddress);
     cout << "Enter Suburb:\t\t";
     getline(cin, reg.suburb);
     cout << "Enter City:\t\t";
     getline(cin, reg.city);
-    cout << "\nEnter Date of Birth (dd mm yyyy):\n"; //DOB does not yet check for valid date of birth. Will not prevent someone born on 32/13/3021, for example.
+    cout << "\nEnter Date of Birth (dd mm yyyy):\n";
     cout << "day:\t";
     cin >> reg.dobDay;
     cout << "month:\t";
@@ -1119,8 +1081,24 @@ vector<Donor> donor_registration(vector<Donor> donors) {
         }
     } while (flag == 1);
 
-    cout << "Enter Blood Type:\t"; //Blood type does not yet check for valid blood type. Will not prevent someone having the blood type "Banana", for example.
-    cin >> reg.bloodType;
+    do {
+        cout << "Enter Blood Type:\t"; //Blood type does not yet check for valid blood type. Will not prevent someone having the blood type "Banana", for example.
+        cin >> reg.bloodType;
+
+        string bloodTypes[8] = { "A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-" };
+        for(int i = 0; i < 8; i++) {
+            if (reg.bloodType == bloodTypes[i]) {
+                flag = 0;
+            }
+            else {
+                flag = 1;
+            }
+        }
+
+        if (flag == 1) {
+            cout << "Invalid Blood Type. Please Enter one of the following: A+, A-, B+, B-, O+, O-, AB+, AB-\n";
+        }
+    } while (flag == 1);
 
     //Underlying Conditions
     do {
@@ -1187,7 +1165,7 @@ vector<Donor> donor_registration(vector<Donor> donors) {
     return donors;
 }
 
-vector<Recipient> recipient_login(vector<Recipient> recip) {
+vector<Recipient> recipient_login(vector<Recipient> recip) { //login screen for recipient users
     system("CLS");
 
     //declaring necessary variables
@@ -1282,8 +1260,7 @@ vector<Recipient>* recipient_registration(vector<Recipient>* recip) {
     } while (flag == 1);
 
     cout << "Enter Contact Number:\t";
-    cin >> reg.contactNumber;
-    cin.ignore();
+    getline(cin, reg.contactNumber);
     cout << "Enter Street Address:\t";
     getline(cin, reg.streetAddress);
     cout << "Enter Suburb:\t\t";
@@ -1291,7 +1268,7 @@ vector<Recipient>* recipient_registration(vector<Recipient>* recip) {
     cout << "Enter City:\t\t";
     getline(cin, reg.city);
     cout << "Enter Registration Number:\t";
-    cin >> reg.registrationNumber;
+    getline(cin, reg.registrationNumber);
 
     //Registering recipient data to file
     ofstream regToFile;
@@ -1319,23 +1296,15 @@ vector<Recipient>* recipient_registration(vector<Recipient>* recip) {
 }
 
 
-
-
-
-void admin_recipient_report() {
-    vector<Donor> donors;
+void admin_recipient_report() { //allows administrator to search for recipient info by name
+    //declaring variables
     vector<Recipient> recipients;
-    Booking bookings[248];
     ifstream myFile;
-    Donor transactionD;
     Recipient transactionR;
-    Booking transactionB;
     string line;
     int flag = 0;
-
-
-
     int linenum = 0;
+
     myFile.open("recipients.csv", ios::in);
 
     //Loop to take recipient input from file
@@ -1356,15 +1325,10 @@ void admin_recipient_report() {
         transactionR.city = item;
         getline(linestream, item, ',');
         transactionR.email = item;
-
-        //Int Variables
         getline(linestream, item, ',');
-        stringstream ss(item);
-        ss >> transactionR.contactNumber;
-
+        transactionR.contactNumber = item;
         getline(linestream, item, ',');
-        stringstream rn(item);
-        rn >> transactionR.registrationNumber;
+        transactionR.registrationNumber = item;
 
         //Add structure to vector 'recipients'.
         recipients.push_back(transactionR);
@@ -1373,68 +1337,47 @@ void admin_recipient_report() {
 
     myFile.close();
 
-
+    //taking user input
     system("CLS");
     string searchname;
     cin.ignore();
     cout << "\nENTER RECIPIENTS NAME TO FIND REPORT" << endl;
     cout << "******************************************************" << endl;
     getline(cin, searchname);
-    system("CLS");
 
-
+    //search and display recipient information
     for (auto element : recipients) {
         if (element.name == searchname) {
 
             cout << "-----------------------------------------------------" << endl;
             cout << "\t\t" << element.name << endl;
             cout << "-----------------------------------------------------" << endl;
-            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << element.city << endl;
+            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
             cout << "\nEMAIL: " << element.email << endl;
             cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
-            cout << "\nREGISTRATION NUMBER: " << element.registrationNumber << endl;
-
-
-
+            cout << "\nREGISTRATION NUMBER: " << element.registrationNumber << "\n\n";
 
             flag = 1;
-
         }
 
     }
 
+    //displays appropriate message if no recipients with given name exist
     if (flag == 0) {
-
-        cout << "THERE ARE NO REPORTS WITH THE NAME: " << searchname << endl;
-
-
-
+        cout << "\nTHERE ARE NO REPORTS WITH THE NAME: " << searchname << "\n\n";
     }
 
-
-    cout << "\n";
     system("PAUSE");
     system("CLS");
-
-
-
-
 }
 
 
-
-
-
-
-
-void admin_donor_report() {
-
+void admin_donor_report() { //allows administrator to search for donor info by name
+    //declaring variables
     vector<Donor> donors;
-    vector<Recipient> recipients;
     ifstream myFile;
     ifstream conditionFile;
     Donor transactionD;
-    Recipient transactionR;
     string line;
     string donorEmail;
     int flag = 0;
@@ -1467,16 +1410,11 @@ void admin_donor_report() {
         transactionD.ethnicity = item;
         getline(linestream, item, ',');
         transactionD.gender = item;
-
-
-
+        getline(linestream, item, ',');
+        transactionD.contactNumber = item;
 
 
         //Int Variables
-        getline(linestream, item, ',');
-        stringstream ss(item);
-        ss >> transactionD.contactNumber;
-
         getline(linestream, item, ',');
         stringstream day(item);
         day >> transactionD.dobDay;
@@ -1496,13 +1434,7 @@ void admin_donor_report() {
         //Add structure to vector 'donors'.
         donors.push_back(transactionD);
         linenum++;
-
-
-
     }
-
-
-
 
     //opening conditions
     linenum = 0;
@@ -1530,73 +1462,65 @@ void admin_donor_report() {
     myFile.close();
 
 
-
-
-
+    //taking user input
     system("CLS");
     string searchname;
     cin.ignore();
     cout << "\nENTER DONORS NAME TO FIND REPORT" << endl;
     cout << "******************************************************" << endl;
     getline(cin, searchname);
-    system("CLS");
 
-
+    //search and display donor info
     for (auto element : donors) {
         if (element.name == searchname) {
 
-            cout << "-----------------------------------------------------" << endl;
+            cout << "\n-----------------------------------------------------" << endl;
             cout << "\t\t" << element.name << endl;
             cout << "-----------------------------------------------------" << endl;
             cout << "\nBLOOD TYPE: " << element.bloodType << endl;
             cout << "\nSTREET ADDRESS: " << element.streetAddress << endl;
-            cout << "\nEMAIL: " << element.email << endl;                                                                                                                                                                                           
+            cout << "\nEMAIL: " << element.email << endl;
             cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
             cout << "\nDATE OF BIRTH: " << element.dobDay << "/" << element.dobMonth << "/" << element.dobYear << endl;
             cout << "\nGENDER: " << element.gender << endl;
             cout << "\nETHNICITY: " << element.ethnicity << endl;
 
-
-            if (element.underlyingConditions.size() == 0) { //Checking if user has underlying conditions to output
-                cout << element.name << "DOES NOT HAVE ANY UNDERLYING CONDITIONS \n\n" << endl;
+            int numOfCond = element.underlyingConditions.size();
+            if (numOfCond == 0) { //Checking if user has underlying conditions to output
+                cout << element.name << " does not have any underlying conditions\n\n" << endl;
             }
             else {
+                int n = 1;
+                cout << "\nUNDERLYING CONDITIONS: ";
                 for (auto element : element.underlyingConditions) {
-                    cout << "\nUNDERLYING CONDITIONS: " << element << endl;
+                    cout << element;
+                    if (n != numOfCond) {
+                        cout << ", ";
+                    }
+                    n++;
                 }
-                cout << endl;
+                cout << "\n\n";
             }
-
-
-
             flag = 1;
-
         }
-
     }
 
+    //displays appropriate message if no donors with given name exist
     if (flag == 0) {
         cout << "\n";
-        cout << "THERE ARE NO REPORTS WITH THE NAME: " << searchname << endl;
-
-
-
+        cout << "THERE ARE NO REPORTS WITH THE NAME: " << searchname << "\n\n";
     }
 
-
-    cout << "\n";
     system("PAUSE");
     system("CLS");
 }
 
 
-void admin_blood_report() {
-
+void admin_blood_report() { //allows adminstrator to search for donors based on blood type
+    //declaring variables
     vector<Donor> donors;
-    vector<Recipient> recipients;
     ifstream myFile;
     Donor transactionD;
-    Recipient transactionR;
     string line;
     int flag = 0;
 
@@ -1628,14 +1552,11 @@ void admin_blood_report() {
         transactionD.ethnicity = item;
         getline(linestream, item, ',');
         transactionD.gender = item;
-
+        getline(linestream, item, ',');
+        transactionD.contactNumber = item;
 
 
         //Int Variables
-        getline(linestream, item, ',');
-        stringstream ss(item);
-        ss >> transactionD.contactNumber;
-
         getline(linestream, item, ',');
         stringstream day(item);
         day >> transactionD.dobDay;
@@ -1655,7 +1576,7 @@ void admin_blood_report() {
 
     myFile.close();
 
-
+    //taking user input
     system("CLS");
     string searchblood;
     cin.ignore();
@@ -1664,7 +1585,7 @@ void admin_blood_report() {
     getline(cin, searchblood);
 
 
-
+    //search and display donor info by blood type
     for (auto element : donors) {
         if (element.bloodType == searchblood) {
             cout << "-----------------------------------------------------" << endl;
@@ -1681,36 +1602,22 @@ void admin_blood_report() {
         }
     }
 
+    //displays appropriate message if no donors with given blood type exist
     if (flag == 0) {
         system("CLS");
         cout << "THERE ARE NO DONORS WITH BLOOD TYPE: " << searchblood << endl;
         system("PAUSE");
     }
 
-
-
     system("CLS");
-
-
-
-
-
-
 }
 
 
-
-
-
-
-void admin_location_report() {
-
-
+void admin_location_report() { //allows administrator to search for donors based on their city of residence
+    //declaring variables
     vector<Donor> donors;
-    vector<Recipient> recipients;
     ifstream myFile;
     Donor transactionD;
-    Recipient transactionR;
     string line;
     int flag = 0;
 
@@ -1742,14 +1649,11 @@ void admin_location_report() {
         transactionD.ethnicity = item;
         getline(linestream, item, ',');
         transactionD.gender = item;
-
+        getline(linestream, item, ',');
+        transactionD.contactNumber = item;
 
 
         //Int Variables
-        getline(linestream, item, ',');
-        stringstream ss(item);
-        ss >> transactionD.contactNumber;
-
         getline(linestream, item, ',');
         stringstream day(item);
         day >> transactionD.dobDay;
@@ -1769,7 +1673,7 @@ void admin_location_report() {
 
     myFile.close();
 
-
+    //taking user input
     system("CLS");
     string searchcity;
     cin.ignore();
@@ -1778,19 +1682,19 @@ void admin_location_report() {
     getline(cin, searchcity);
 
 
-
+    //search and display donor info by city
     for (auto element : donors) {
         if (element.city == searchcity) {
-            cout << "-----------------------------------------------------" << endl;
+            cout << "\n-----------------------------------------------------" << endl;
             cout << "\t\t" << element.name << endl;
             cout << "-----------------------------------------------------" << endl;
-            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << element.city << endl;
+            cout << "\nSTREET ADDRESS: " << element.streetAddress << ", " << element.suburb << ", " << element.city << endl;
             cout << "\nEMAIL: " << element.email << endl;
             cout << "\nCONTACT NUMBER: " << element.contactNumber << endl;
             cout << "\nETHNICITY: " << element.ethnicity << endl;
             cout << "\nGENDER: " << element.gender << endl;
             cout << "\nDOB: " << element.dobDay << "/" << element.dobMonth << "/" << element.dobYear << endl;
-        
+            cout << "-----------------------------------------------------" << "\n\n";
 
             flag = 1;
             system("PAUSE");
@@ -1799,32 +1703,19 @@ void admin_location_report() {
         }
     }
 
+    //displays appropriate message if no donors that live in given city exist
     if (flag == 0) {
 
-        cout << "THERE ARE NO DONORS THAT LIVE IN: " << searchcity << endl;
+        cout << "\nTHERE ARE NO DONORS THAT LIVE IN: " << searchcity << "\n\n";
         system("PAUSE");
 
     }
 
-
-
     system("CLS");
-
-
-
 }
 
 
-
-
-
-
-
-
-
-
-
-vector<Donor> admin_update_donor(vector<Donor> donors)
+vector<Donor> admin_update_donor(vector<Donor> donors) //allows administrator to update donor blood test information such as blood type or underlying conditions
 {
     system("CLS");
 
@@ -1995,7 +1886,8 @@ vector<Donor> admin_update_donor(vector<Donor> donors)
     return donors;
 }
 
-vector<Admin> admin_registration(vector<Admin> admins) {
+vector<Admin> admin_registration(vector<Admin> admins) { //allows adminstrator to register a new admin account
+    //declaring variables
     Admin reg;
     bool flag = 0;
     string tempPW1, tempPW2;
@@ -2052,16 +1944,19 @@ vector<Admin> admin_registration(vector<Admin> admins) {
     return admins;
 }
 
-vector<Donor> admin_delete_donor(vector<Donor> donors) {
+vector<Donor> admin_delete_donor(vector<Donor> donors) { //allows adminstrator to delete a donor account
+    //declaring variables
     string inEmail;
     int position = 0;
     bool flag = 0;
     char choice;
 
+    //taking user input
     cin.ignore();
     cout << "\nEnter Donor Email:\t";
     getline(cin, inEmail);
     
+    //search and display donor info by given email
     for (auto element : donors) {
         if (element.email == inEmail) {
             system("CLS");
@@ -2077,20 +1972,21 @@ vector<Donor> admin_delete_donor(vector<Donor> donors) {
         }
     }
 
+    //checks if donor with given email was found
     if (flag == 0) {
         cout << "\nDonor with this email not found.\n\n";
         system("PAUSE");
     }
     else {
         flag = 0;
-        while (flag == 0) {
+        while (flag == 0) { //while loop to ensure valid y/n input
             cout << "\nDo you want to delete this user? (y/n)\t";
             cin >> choice;
 
             switch (tolower(choice)) {
             case 'y':
 
-                while (flag == 0) {
+                while (flag == 0) { //second while loop to ensure valid y/n input, also gives admin another chance to make sure they're deleting the right account
                     cout << "\nWARNING: This will PERMANENTLY delete this Donor's record. Are you sure? (y/n)\t";
                     cin >> choice;
 
@@ -2163,16 +2059,19 @@ vector<Donor> admin_delete_donor(vector<Donor> donors) {
     return donors;
 }
 
-vector<Recipient> admin_delete_recipient(vector<Recipient> recip) {
+vector<Recipient> admin_delete_recipient(vector<Recipient> recip) { //allows administrator to delete recipient account
+    //declaring vairables
     string inEmail;
     int position = 0;
     bool flag = 0;
     char choice;
 
+    //taking user input
     cin.ignore();
     cout << "\nEnter Recipient Email:\t";
     getline(cin, inEmail);
 
+    //search and display recipient information by given email
     for (auto element : recip) {
         if (element.email == inEmail) {
             system("CLS");
@@ -2187,26 +2086,27 @@ vector<Recipient> admin_delete_recipient(vector<Recipient> recip) {
         }
     }
 
+    //checks if recipient with given email was found
     if (flag == 0) {
         cout << "\nRecipient with this email not found.\n\n";
         system("PAUSE");
     }
     else {
         flag = 0;
-        while (flag == 0) {
+        while (flag == 0) { //while loop to ensure valid y/n input
             cout << "\nDo you want to delete this user? (y/n)\t";
             cin >> choice;
 
             switch (tolower(choice)) {
             case 'y':
 
-                while (flag == 0) {
+                while (flag == 0) { //second while loop to ensure valid y/n input, also gives admin another chance to make sure they're deleting the right account
                     cout << "\nWARNING: This will PERMANENTLY delete this Recipient's record. Are you sure? (y/n)\t";
                     cin >> choice;
 
                     switch (tolower(choice)) {
                     case 'y':
-                        //deletes donor record at position email was found
+                        //deletes recipient record at position email was found
                         recip.erase(recip.begin() + position);
                         cout << "\nRecord Deleted.\n\n";
                         flag = 1;
@@ -2255,19 +2155,22 @@ vector<Recipient> admin_delete_recipient(vector<Recipient> recip) {
     return recip;
 }
 
-vector<Admin> admin_delete_admin(vector<Admin> admins, int p) {
+vector<Admin> admin_delete_admin(vector<Admin> admins, int p) { //allows administrator to delete another admin account
+    //declaring variables
     string inEmail;
     int position = 0;
     bool flag = 0, flag2 = 0;
     char choice;
 
+    //taking user input
     cin.ignore();
     cout << "\nEnter Admin Email:\t";
     getline(cin, inEmail);
 
+    //search and display admin information based on given email
     for (auto element : admins) {
         if (element.email == inEmail) {
-            if (element.email == admins[p].email) {
+            if (element.email == admins[p].email) { //checks if given email is the same email admin is logged in with, to ensure the admin does not delete their own account
                 cout << "\nYou cannot delete your own account!\n\n";
                 system("PAUSE");
                 flag2 = 1;
@@ -2284,26 +2187,27 @@ vector<Admin> admin_delete_admin(vector<Admin> admins, int p) {
         }
     }
 
-    if (flag == 0 && flag2 == 0) {
+    //checking if admin with given email was found
+    if (flag == 0 && flag2 == 0) { //displays not found message only if email was not found. skips this message if email belongs to the admin currently logged in
         cout << "\nAdmin with this email not found.\n\n";
         system("PAUSE");
     }
     else if (flag == 1){
         flag = 0;
-        while (flag == 0) {
+        while (flag == 0) { //while loop to ensure valid y/n input
             cout << "\nDo you want to delete this admin account? (y/n)\t";
             cin >> choice;
 
             switch (tolower(choice)) {
             case 'y':
 
-                while (flag == 0) {
+                while (flag == 0) { //second while loop to ensure valid y/n input, also gives admin another chance to make sure they're deleting the right account
                     cout << "\nWARNING: This will PERMANENTLY delete this Admin Account. Are you sure? (y/n)\t";
                     cin >> choice;
 
                     switch (tolower(choice)) {
                     case 'y':
-                        //deletes donor record at position email was found
+                        //deletes admin record at position email was found
                         admins.erase(admins.begin() + position);
                         cout << "\nAccount Deleted.\n\n";
                         flag = 1;
@@ -2343,12 +2247,15 @@ vector<Admin> admin_delete_admin(vector<Admin> admins, int p) {
 
     myFile.close();
 
+    return admins;
 }
 
-OmniStruct admin_delete_user(vector<Admin> admins, vector<Donor> donors, vector<Recipient> recip, int p)
-{
+OmniStruct admin_delete_user(vector<Admin> admins, vector<Donor> donors, vector<Recipient> recip, int p){ //menu screen for admin deleting user accounts
+    //declaring variables
     bool flag = 0;
     int choice;
+
+    //menu
     while (flag == 0) {
         system("CLS");
         cout << "\n\tDelete a User\n";
@@ -2369,7 +2276,7 @@ OmniStruct admin_delete_user(vector<Admin> admins, vector<Donor> donors, vector<
             recip = admin_delete_recipient(recip);
             break;
         case 3:
-            if (admins.size() == 1) {
+            if (admins.size() == 1) { //checks to make sure there is more than one admin account. admin cannot delete last account.
                 cout << "\nThis is the only Admin Account. You cannot delete it.\n\n";
                 system("PAUSE");
             }
@@ -2381,7 +2288,7 @@ OmniStruct admin_delete_user(vector<Admin> admins, vector<Donor> donors, vector<
             flag = 1;
             break;
         default:
-            cout << "Please enter a valid menu option.\n";
+            cout << "\nPlease enter a valid menu option.\n";
             system("PAUSE");
         }
     }
@@ -2390,34 +2297,33 @@ OmniStruct admin_delete_user(vector<Admin> admins, vector<Donor> donors, vector<
     return o;
 }
 
-OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vector<Recipient> recip, int p)
-{
+OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vector<Recipient> recip, int p){ //menu screen for users logged in as administrators
+    //declaring variables
     OmniStruct o = { donors, recip, admins };
     bool flag = 0;
     int choice;
+
+    //menu
     while (flag == 0)
     {
         system("CLS");
         cout << "\n\t\t\t\t\tWELCOME ADMIN \n";
         cout << "************************************************************************************************************\n\n";
 
-        cout << "1. view donor's report\n";
-        cout << "2. view Recipient report \n";
-        cout << "3. Update donor blood testing report \n";
-        cout << "4. Location report\n";
-        cout << "5. Blood group report\n";
+        cout << "1. View Donor's Report\n";
+        cout << "2. View Recipient Report \n";
+        cout << "3. Update Donor Blood Testing Report \n";
+        cout << "4. Location Report\n";
+        cout << "5. Blood Group Report\n";
         cout << "6. Register New Admin\n";
         cout << "7. Delete a User\n";
-        cout << "8. Logout\n";
+        cout << "8. Logout\n\n";
         cout << "Enter Option Number:\t";
         cin >> choice;
 
         switch (choice) {
         case 1:
-
             admin_donor_report();
-
-
             break;
         case 2:
             admin_recipient_report();
@@ -2428,13 +2334,10 @@ OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vect
             break;
         case 4:
             admin_location_report();
-
             break;
-
         case 5:
             admin_blood_report();
             break;
-
         case 6:
             admins = admin_registration(admins);
             break;
@@ -2447,21 +2350,19 @@ OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vect
         case 8:
             flag = 1;
             system("CLS");
-            
-            
             break;
-
         default:
-            cout << "Please enter a valid menu option.\n";
+            cout << "\nPlease enter a valid menu option.\n";
             system("PAUSE");
         }
-    }   
+    }
+
     o = { donors, recip, admins };
     return o;
 }
 
 
-OmniStruct admin_login(vector<Admin> admins, vector<Donor> donors, vector<Recipient> recip) {
+OmniStruct admin_login(vector<Admin> admins, vector<Donor> donors, vector<Recipient> recip) { //allows user to log in as administrator
     system("CLS");
 
     //declaring necessary variables
@@ -2524,19 +2425,8 @@ OmniStruct admin_login(vector<Admin> admins, vector<Donor> donors, vector<Recipi
 }
 
 
-
-
-
-
-
-
-
-
-
-
 int main()
 {
-    //reading files to vectors
     //declaring necessary variables
     vector<Donor> donors;
     vector<Recipient> recipients;
@@ -2548,6 +2438,8 @@ int main()
     Admin transactionA;
     Booking transactionB;
     string line, donorEmail;
+
+    //reading files to vectors
 
     //opening Donors
     int linenum = 0;
@@ -2577,12 +2469,10 @@ int main()
         transactionD.ethnicity = item;
         getline(linestream, item, ',');
         transactionD.gender = item;
+        getline(linestream, item, ',');
+        transactionD.contactNumber = item;
 
         //Int Variables
-        getline(linestream, item, ',');
-        stringstream ss(item);
-        ss >> transactionD.contactNumber;
-
         getline(linestream, item, ',');
         stringstream day(item);
         day >> transactionD.dobDay;
@@ -2628,15 +2518,10 @@ int main()
         transactionR.city = item;
         getline(linestream, item, ',');
         transactionR.email = item;
-
-        //Int Variables
         getline(linestream, item, ',');
-        stringstream ss(item);
-        ss >> transactionR.contactNumber;
-
+        transactionR.contactNumber = item;
         getline(linestream, item, ',');
-        stringstream rn(item);
-        rn >> transactionR.registrationNumber;
+        transactionR.registrationNumber = item;
 
         //Add structure to vector 'recipients'.
         recipients.push_back(transactionR);
@@ -2726,12 +2611,12 @@ int main()
     vector<Recipient>* ptrrecipients = &recipients;
     Booking* ptrbookings = bookings;
 
-    //INTRO MENU
-    //****************
+    //declaring menu variables
     bool flag = 0;
     int choice;
     OmniStruct o;
 
+    //menu
     while (flag == 0) {
         cout << "\n\t\t\t\t\tWELCOME TO CAPITAL BLOODBANK\n";
         cout << "************************************************************************************************************\n\n";
@@ -2773,14 +2658,13 @@ int main()
             recipients = o.r;
             break;
         case 8:
-            cout << "Thank you for using Capital Bloodbank!\n";
+            cout << "\nThank you for using Capital Bloodbank!\n";
             return 0;
             break;
         default:
-            cout << "Please enter a valid menu option.\n";
+            cout << "\nPlease enter a valid menu option.\n";
             system("PAUSE");
             system("CLS");
         }
     }
-    //****************
 }
