@@ -2002,24 +2002,11 @@ vector<Admin> admin_registration(vector<Admin> admins) {
 
 
 
-<<<<<<< HEAD
-
-void admin_landing_screen()
-{
-
-
-=======
->>>>>>> origin/dev
-    return admins;
 }
 
 OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vector<Recipient> recip)
 {
     OmniStruct o = { donors, recip, admins };
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/dev
     bool flag = 0;
     int choice;
     while (flag == 0)
@@ -2032,21 +2019,11 @@ OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vect
         cout << "1. view donor's report\n";
         cout << "2. view Recipient report \n";
         cout << "3. Update donor blood testing report \n";
-<<<<<<< HEAD
-        cout << "4. Location report \n";
-        cout << "5. Blood group report\n";
-        cout << "6. unnamed \n";
-        cout << "7. unnamed \n";
-        cout << "8. Logout\n";
-     
-
-=======
         cout << "4. Location report ";
         cout << "5. Blood group report";
         cout << "6. unnamed ";
         cout << "7. unnamed ";
         cout << "8. Logout\n";
->>>>>>> origin/dev
         cout << "Enter Option Number:\t";
         cin >> choice;
 
@@ -2061,17 +2038,8 @@ OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vect
             admin_recipient_report();
             break;
         case 3:
-<<<<<<< HEAD
-
-
-
             cin.ignore();
             donors = admin_update_donor(donors);
-
-=======
-            cin.ignore();
-            donors = admin_update_donor(donors);
->>>>>>> origin/dev
             break;
         case 4:
             admin_location_report();
@@ -2104,15 +2072,7 @@ OmniStruct admin_landing_screen(vector<Admin> admins, vector<Donor> donors, vect
             system("PAUSE");
             system("CLS");
         }
-    }
-<<<<<<< HEAD
-
-
-}
-
-=======
->>>>>>> origin/dev
-    
+    }   
     o = { donors, recip, admins };
     return o;
 }
@@ -2176,10 +2136,6 @@ OmniStruct admin_login(vector<Admin> admins, vector<Donor> donors, vector<Recipi
     }
 
     system("CLS");
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/dev
 
     return o;
 }
